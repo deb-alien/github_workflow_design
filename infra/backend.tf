@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
-    bucket       = "github-actions-workflow-design"
-    key          = "terraform/state/terraform.tfstate"
+    bucket       = "production-api-tf-state"
+    key          = "production/terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true
     encrypt      = true
