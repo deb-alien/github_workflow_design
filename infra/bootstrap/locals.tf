@@ -1,3 +1,2 @@
 locals {
-  tags = var.tags
 }
