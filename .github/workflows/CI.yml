@@ -8,7 +8,10 @@ on:
 
 permissions:
     contents: read
-    actions: write
+
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
 
 jobs:
     backend:
@@ -37,3 +40,45 @@ jobs:
 
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
+
+            - name: Run ESLint
+              run: pnpm lint
+
+            - name: Run Unit Tests
+              run: pnpm test
+
+            - name: Build Application
+              run: pnpm build
+
+    terraform:
+        name: Terraform Validate
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: infra
+                shell: bash
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v7
+
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v4
+              with:
+                  terraform_version: 1.15.0
+
+            - name: Setup TFLint
+              uses: terraform-linters/setup-tflint@v6
+              with:
+                  tflint_version: latest
+
+            - name: Validate Terraform format and linting
+              run: |
+                  terraform fmt -check -recursive
+                  tflint --init
+                  tflint --recursive -f compact
+
+            - name: Validate Terraform configuration
+              run: |
+                  terraform init -backend=false
+                  terraform validate
