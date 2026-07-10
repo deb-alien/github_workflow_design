@@ -91,7 +91,7 @@ jobs:
                   terraform init
                   terraform plan \
                   -out=production.tfplan \
-                  -var="region=${{ vars.AWS_REGION }}" \
+                  -var="aws_region=${{ vars.AWS_REGION }}" \
                   -var="environment=production" \
                   -var="project_name=${{ vars.PROJECT_NAME }}" \
                   -var="vpc_cidr=${{ vars.VPC_CIDR }}" \
