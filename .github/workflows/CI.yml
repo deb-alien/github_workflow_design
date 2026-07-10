@@ -79,3 +79,12 @@ jobs:
               run: |
                   terraform init -backend=false
                   terraform validate
+            - name: Terraform Plan
+              run: |
+                terraform plan \
+                -out=production.tfplan \
+                -var="region=us-east-1" \
+                -var="environment=production" \
+                -var="project_name=production-api" \
+                -var="vpc_cidr=10.0.0.0/16" \
+                -var="availability_zone_count=3"
