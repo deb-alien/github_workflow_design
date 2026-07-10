@@ -59,6 +59,12 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v7
 
+            - name: Setup AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v6.1.3
+              with:
+                  role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+                  aws-region: ${{ vars.AWS_REGION }}
+
             - name: Setup Terraform
               uses: hashicorp/setup-terraform@v4
               with:
@@ -84,8 +90,8 @@ jobs:
                   terraform init
                   terraform plan \
                   -out=production.tfplan \
-                  -var="region=us-east-1" \
+                  -var="region=${{ vars.AWS_REGION }}" \
                   -var="environment=production" \
-                  -var="project_name=production-api" \
-                  -var="vpc_cidr=10.0.0.0/16" \
-                  -var="availability_zone_count=3"
+                  -var="project_name=${{ vars.PROJECT_NAME }}" \
+                  -var="vpc_cidr=${{ vars.VPC_CIDR }}" \
+                  -var="availability_zone_count=${{ vars.AVAILABILITY_ZONE_COUNT }}"
