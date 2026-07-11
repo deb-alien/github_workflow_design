@@ -83,8 +83,8 @@ jobs:
                   tflint_version: latest
 
             - name: Terraform Lint
-              working-directory: infra
               run: |
+                  pwd
                   tflint --init
                   tflint --recursive -f compact
 
