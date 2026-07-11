@@ -24,7 +24,6 @@ variable "vpc_cidr" {
 
 variable "availability_zone_count" {
   description = "Number of Availability Zones to use"
-  type        = number
   default     = 3
 
   validation {
