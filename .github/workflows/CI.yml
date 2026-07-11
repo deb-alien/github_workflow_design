@@ -101,7 +101,7 @@ jobs:
                   -var="aws_region=${{ vars.TF_VAR_AWS_REGION }}" \
                   -var="project_name=${{ vars.TF_VAR_PROJECT_NAME }}" \
                   -var="vpc_cidr=${{ vars.TF_VAR_VPC_CIDR }}" \
-                  -var="availability_zone_count=${{ vars.TF_VAR_AVAILABILITY_ZONE_COUNT }}"\
+                  -var="availability_zone_count=${{ vars.TF_VAR_AVAILABILITY_ZONE_COUNT }}" \
                   -var="ssl_policy=${{ secrets.TF_VAR_SSL_POLICY }}" \
                   -var="root_domain_name=${{ vars.TF_VAR_ROOT_DOMAIN_NAME }}" \
                   -var="sub_domain=${{ vars.TF_VAR_SUB_DOMAIN }}"
