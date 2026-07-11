@@ -59,7 +59,7 @@ jobs:
             fail-fast: false
         defaults:
             run:
-                working-directory: infra/environments/${{ matrix.environment }}
+                working-directory: ./infra/environments/${{ matrix.environment }}
                 shell: bash
 
         steps:
@@ -83,7 +83,7 @@ jobs:
                   tflint_version: latest
 
             - name: Validate Terraform format and linting
-              working-directory: infra
+              working-directory: ./infra
               run: |
                   terraform fmt -check -recursive
                   tflint --init
