@@ -8,7 +8,7 @@ data "aws_availability_zones" "azs" {
 }
 
 module "vpc" {
-  source = "./modules/vpc"
+  source = "../../modules/vpc"
 
   project_name = var.project_name
   environment  = var.environment
@@ -22,15 +22,28 @@ module "vpc" {
 }
 
 module "security_group" {
-  source = "./modules/security_group"
+  source = "../../modules/security_group"
 
   project_name = var.project_name
   environment  = var.environment
   vpc_id       = module.vpc.vpc_id
 }
 
+module "route53" {
+  source = "../../modules/route53"
+
+  environment = var.environment
+
+  domain_name  = "deb-alien.com"
+  private_zone = false
+  sub_domain   = "api"
+
+  alb_dns_name = module.alb.load_balancer_dns_name
+  alb_zone_id  = module.alb.load_balancer_zone_id
+}
+
 module "alb" {
-  source = "./modules/alb"
+  source = "../../modules/alb"
 
   project_name = var.project_name
   environment  = var.environment
