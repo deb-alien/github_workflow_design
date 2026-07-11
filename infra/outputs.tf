@@ -18,27 +18,27 @@ output "database_subnet_ids" {
   description = "The IDs of the database subnets"
 }
 
-output "nat_gateway_ids" {
-  value       = module.vpc.nat_gateway_ids
-  description = "The IDs of the NAT Gateways"
+output "load_balancer_dns_name" {
+  value       = module.alb.load_balancer_dns_name
+  description = "The DNS name of the ALB"
 }
 
-output "nat_gateway_eip_ids" {
-  value       = module.vpc.nat_gateway_eip_ids
-  description = "The IDs of the NAT Gateway Elastic IPs"
+output "load_balancer_arn" {
+  value       = module.alb.load_balancer_arn
+  description = "The ARN of the ALB"
 }
 
-output "public_route_table_ids" {
-  value       = module.vpc.public_route_table_ids
-  description = "The IDs of the public route tables"
+output "load_balancer_zone_id" {
+  value       = module.alb.load_balancer_zone_id
+  description = "The canonical hosted zone ID of the ALB"
 }
 
-output "private_route_table_ids" {
-  value       = module.vpc.private_route_table_ids
-  description = "The IDs of the private route tables"
+output "target_group_arn" {
+  value       = module.alb.target_group_arn
+  description = "The ARN of the target group"
 }
 
-output "database_route_table_ids" {
-  value       = module.vpc.database_route_table_ids
-  description = "The IDs of the database route tables"
+output "http_listener_arn" {
+  value       = module.alb.http_listener_arn
+  description = "The ARN of the HTTP listener"
 }
