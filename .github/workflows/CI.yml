@@ -83,7 +83,6 @@ jobs:
                   tflint_version: latest
 
             - name: Validate Terraform format and linting
-              working-directory: infra
               run: |
                   terraform fmt -check -recursive
                   tflint --init
