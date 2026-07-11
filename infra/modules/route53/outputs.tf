@@ -7,3 +7,8 @@ output "record_name" {
   value       = local.record_name
   description = "The name of the Route53 record"
 }
+
+output "zone_id" {
+  value       = data.aws_route53_zone.this.zone_id
+  description = "The ID of the Route53 zone"
+}

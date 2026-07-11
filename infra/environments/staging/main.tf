@@ -34,12 +34,22 @@ module "route53" {
 
   environment = var.environment
 
-  domain_name  = "deb-alien.com"
+  domain_name  = var.root_domain_name
   private_zone = false
-  sub_domain   = "api"
+  sub_domain   = var.sub_domain
 
   alb_dns_name = module.alb.load_balancer_dns_name
   alb_zone_id  = module.alb.load_balancer_zone_id
+}
+
+module "acm" {
+  source = "../../modules/acm"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  domain_name    = var.root_domain_name
+  hosted_zone_id = module.route53.zone_id
 }
 
 module "alb" {
@@ -54,8 +64,8 @@ module "alb" {
   enable_http2 = true
   idle_timeout = 60
 
-  certificate_arn          = ""
-  ssl_policy               = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  certificate_arn          = module.acm.certificate_arn
+  ssl_policy               = var.ssl_policy
   enable_delete_protection = false
 
   container_port       = 3000
