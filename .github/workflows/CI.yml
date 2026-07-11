@@ -82,16 +82,15 @@ jobs:
               with:
                   tflint_version: latest
 
-            - name: Terraform Lint
+            - name: Terraform Lint and Format Check
               run: |
-                  cd ../../
+                  terraform fmt -check -recursive
                   tflint --init
                   tflint --recursive -f compact
 
-            - name: Validate Terraform configuration and formatting
+            - name: Validate Terraform configuration
               run: |
                   terraform init -backend=false
-                  terraform fmt -check -recursive
                   terraform validate
             - name: Terraform Plan
               run: |
