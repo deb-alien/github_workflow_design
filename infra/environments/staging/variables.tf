@@ -27,8 +27,26 @@ variable "availability_zone_count" {
   type        = number
   default     = 3
 
+
   validation {
     condition     = var.availability_zone_count >= 2 && var.availability_zone_count <= 6
     error_message = "The number of availability zones must be between 2 and 6."
   }
+}
+
+variable "ssl_policy" {
+  description = "The SSL policy for the Application Load Balancer."
+  type        = string
+  default     = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+}
+
+
+variable "root_domain_name" {
+  description = "The root domain name for the ACM certificate."
+  type        = string
+}
+
+variable "sub_domain" {
+  description = "The subdomain for the Route53 record."
+  type        = string
 }
