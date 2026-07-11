@@ -20,3 +20,35 @@ module "vpc" {
   enable_nat_gateway = false
   single_nat_gateway = false
 }
+
+module "security_group" {
+  source = "./modules/security_group"
+
+  project_name = var.project_name
+  environment  = var.environment
+  vpc_id       = module.vpc.vpc_id
+}
+
+module "alb" {
+  source = "./modules/alb"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  vpc_id = module.vpc.vpc_id
+
+  internal     = false
+  enable_http2 = true
+  idle_timeout = 60
+
+  certificate_arn          = ""
+  ssl_policy               = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  enable_delete_protection = false
+
+  container_port       = 3000
+  health_check_path    = "/api/health"
+  health_check_matcher = "200"
+
+  public_subnet_ids  = module.vpc.public_subnet_ids
+  security_group_ids = [module.security_group.alb_security_group_id]
+}
