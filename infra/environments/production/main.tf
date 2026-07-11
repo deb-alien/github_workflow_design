@@ -15,7 +15,7 @@ module "vpc" {
 
   vpc_cidr                = var.vpc_cidr
   map_public_ip_on_launch = true
-  availability_zones      = slice(data.aws_availability_zones.azs.names, 0, tonumber(var.availability_zone_count))
+  availability_zones      = slice(data.aws_availability_zones.azs.names, 0, var.availability_zone_count)
 
   enable_nat_gateway = false
   single_nat_gateway = false
