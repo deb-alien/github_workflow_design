@@ -24,10 +24,12 @@ variable "vpc_cidr" {
 
 variable "availability_zone_count" {
   description = "Number of Availability Zones to use"
-  default     = 3
+  type        = string
+  default     = "3"
+
 
   validation {
-    condition     = var.availability_zone_count >= 2 && var.availability_zone_count <= 6
+    condition     = tonumber(var.availability_zone_count) >= 2 && tonumber(var.availability_zone_count) <= 6
     error_message = "The number of availability zones must be between 2 and 6."
   }
 }
