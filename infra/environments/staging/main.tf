@@ -36,7 +36,7 @@ module "route53" {
 
   domain_name  = "deb-alien.com"
   private_zone = false
-  sub_domain   = "staging-api"
+  sub_domain   = "api"
 
   alb_dns_name = module.alb.load_balancer_dns_name
   alb_zone_id  = module.alb.load_balancer_zone_id
