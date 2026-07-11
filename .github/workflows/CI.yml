@@ -84,7 +84,7 @@ jobs:
 
             - name: Terraform Lint
               run: |
-                  pwd
+                  cd ../../
                   tflint --init
                   tflint --recursive -f compact
 
