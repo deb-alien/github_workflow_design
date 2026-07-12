@@ -1,7 +1,7 @@
 locals {
   container_definitions = [
     {
-      name      = "${var.project_name}-api"
+      name      = local.container_name
       image     = "${var.repository_url}:${var.image_tag}"
       essential = true
 
@@ -12,8 +12,8 @@ locals {
 
       portMappings = [
         {
-          containerPort = 3000
-          hostPort      = 3000
+          containerPort = var.container_port
+          hostPort      = var.container_port
           protocol      = "tcp"
         }
       ]
@@ -45,7 +45,7 @@ locals {
       healthCheck = {
         command = [
           "CMD-SHELL",
-          "curl -f http://localhost:3000/health || exit 1"
+          "curl -f http://localhost:${var.container_port}${var.health_check_path} || exit 1"
         ]
         interval    = 30
         timeout     = 5

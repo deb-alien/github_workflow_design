@@ -108,5 +108,8 @@ jobs:
                   -var="image_tag=${{ github.sha }}" \
                   -var="cpu=256" \
                   -var="memory=512" \
+                  -var="container_port=${{ vars.TF_VAR_CONTAINER_PORT }}" \
+                  -var="desired_count=${{ vars.TF_VAR_DESIRED_COUNT }}" \
+                  -var="health_check_path=${{ vars.TF_VAR_HEALTH_CHECK_PATH }}" \
                   -var="terraform_remote_state_bucket=${{ secrets.TF_VAR_TERRAFORM_REMOTE_STATE_BUCKET }}" \
                   -var="terraform_remote_state_key=${{ secrets.TF_VAR_TERRAFORM_REMOTE_STATE_KEY }}" \

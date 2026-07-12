@@ -78,3 +78,21 @@ variable "terraform_remote_state_key" {
   type        = string
   default     = "bootstrap/terraform.tfstate"
 }
+
+variable "container_port" {
+  description = "The port on which the container listens."
+  type        = number
+  default     = 300
+}
+
+variable "desired_count" {
+  description = "The desired number of ECS tasks to run."
+  type        = number
+  default     = 2
+}
+
+variable "health_check_path" {
+  description = "The path for the health check endpoint."
+  type        = string
+  default     = "/api/health"
+}

@@ -75,8 +75,8 @@ module "alb" {
   ssl_policy               = var.ssl_policy
   enable_delete_protection = false
 
-  container_port       = 3000
-  health_check_path    = "/api/health"
+  container_port       = var.container_port
+  health_check_path    = var.health_check_path
   health_check_matcher = "200"
 
   public_subnet_ids  = module.vpc.public_subnet_ids
@@ -100,4 +100,10 @@ module "ecs_cluster" {
 
   repository_url = local.ecr_repository_url
   image_tag      = var.image_tag
+
+  container_port     = var.container_port
+  desired_count      = var.desired_count
+  private_subnet_ids = module.vpc.private_subnet_ids
+  security_group_ids = [module.security_group.ecs_security_group_id]
+  target_group_arn   = module.alb.target_group_arn
 }
