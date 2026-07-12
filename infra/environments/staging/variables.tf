@@ -82,7 +82,7 @@ variable "terraform_remote_state_key" {
 variable "container_port" {
   description = "The port on which the container listens."
   type        = number
-  default     = 300
+  default     = 3000
 }
 
 variable "desired_count" {
