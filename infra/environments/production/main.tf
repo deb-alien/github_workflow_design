@@ -98,6 +98,6 @@ module "ecs_cluster" {
   cpu    = var.cpu
   memory = var.memory
 
-  repository_url = ""
+  repository_url = local.ecr_repository_url
   image_tag      = var.image_tag
 }

@@ -8,7 +8,7 @@ resource "aws_ecs_task_definition" "api" {
   execution_role_arn = var.execution_role_arn
   task_role_arn      = var.task_role_arn
 
-  container_definitions = jsondecode(local.container_definitions)
+  container_definitions = jsonencode(local.container_definitions)
 
   tags = merge(
     local.common_tags,
