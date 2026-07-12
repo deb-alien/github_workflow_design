@@ -18,12 +18,11 @@ output "oidc_provider_arn" {
   description = "The ARN of the OIDC provider for GitHub Actions"
 }
 
-output "ecr_repository_url" {
-  value       = module.ecr_repository.ecr_repository_url
-  description = "The URL of the ECR repository for storing Docker images"
-}
-
-output "ecr_repository_name" {
-  value       = module.ecr_repository.ecr_repository_name
-  description = "The name of the ECR repository for storing Docker images"
+output "ecr" {
+  description = "The ECR repository for storing Docker images"
+  value = {
+    name = module.ecr_repository.ecr_repository_name
+    url  = module.ecr_repository.ecr_repository_url
+    arn  = module.ecr_repository.ecr_repository_arn
+  }
 }

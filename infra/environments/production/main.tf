@@ -86,8 +86,18 @@ module "alb" {
 module "ecs_cluster" {
   source = "../../modules/ecs"
 
+  aws_region   = var.aws_region
   project_name = var.project_name
   environment  = var.environment
 
   container_insight = true
+
+  execution_role_arn = module.iam.ecs_task_execution_role_arn
+  task_role_arn      = module.iam.ecs_task_role_arn
+
+  cpu    = var.cpu
+  memory = var.memory
+
+  repository_url = ""
+  image_tag      = var.image_tag
 }

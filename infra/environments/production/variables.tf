@@ -50,3 +50,31 @@ variable "sub_domain" {
   description = "The subdomain for the Route53 record."
   type        = string
 }
+
+variable "image_tag" {
+  description = "The tag of the Docker image to use for the ECS service."
+  type        = string
+}
+
+variable "cpu" {
+  description = "The number of CPU units to reserve for the container."
+  type        = number
+  default     = 256
+}
+
+variable "memory" {
+  description = "The amount of memory (in MiB) to reserve for the container."
+  type        = number
+  default     = 512
+}
+
+variable "terraform_remote_state_bucket" {
+  description = "The S3 bucket name for storing Terraform remote state."
+  type        = string
+}
+
+variable "terraform_remote_state_key" {
+  description = "The S3 key for the Terraform remote state file."
+  type        = string
+  default = "bootstrap/terraform.tfstate"
+}
