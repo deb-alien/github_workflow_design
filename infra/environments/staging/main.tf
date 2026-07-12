@@ -107,4 +107,12 @@ module "ecs_cluster" {
   security_group_ids = [module.security_group.ecs_security_group_id]
   target_group_arn   = module.alb.target_group_arn
   health_check_path  = var.health_check_path
+
+  enable_auto_scaling       = true
+  cpu_utilization_target    = 70
+  memory_utilization_target = 75
+  max_capacity              = 10
+  min_capacity              = 1
+  scale_in_cooldown         = 300
+  scale_out_cooldown        = 60
 }

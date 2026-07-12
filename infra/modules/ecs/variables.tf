@@ -82,3 +82,45 @@ variable "health_check_path" {
   type        = string
   default     = "/api/health"
 }
+
+variable "enable_auto_scaling" {
+  description = "Enable or disable auto-scaling for the ECS service."
+  type        = bool
+  default     = true
+}
+
+variable "min_capacity" {
+  description = "The minimum number of tasks to run in the ECS service when auto-scaling is enabled."
+  type        = number
+  default     = 2
+}
+
+variable "max_capacity" {
+  description = "The maximum number of tasks to run in the ECS service when auto-scaling is enabled."
+  type        = number
+  default     = 10
+}
+
+variable "cpu_utilization_target" {
+  description = "The target CPU utilization percentage for the ECS service when auto-scaling is enabled."
+  type        = number
+  default     = 70
+}
+
+variable "memory_utilization_target" {
+  description = "The target memory utilization percentage for the ECS service when auto-scaling is enabled."
+  type        = number
+  default     = 75
+}
+
+variable "scale_in_cooldown" {
+  description = "The cooldown period (in seconds) after a scaling activity completes before another scaling activity can start."
+  type        = number
+  default     = 300
+}
+
+variable "scale_out_cooldown" {
+  description = "The cooldown period (in seconds) after a scale-out activity completes before another scale-out activity can start."
+  type        = number
+  default     = 60
+}
