@@ -29,6 +29,13 @@ module "security_group" {
   vpc_id       = module.vpc.vpc_id
 }
 
+module "name" {
+  source = "../../modules/iam"
+
+  project_name = var.project_name
+  environment  = var.environment
+}
+
 module "route53" {
   source = "../../modules/route53"
 
