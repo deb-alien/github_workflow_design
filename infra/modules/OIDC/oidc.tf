@@ -31,7 +31,7 @@ resource "aws_iam_openid_connect_provider" "github_oidc" {
 resource "aws_iam_role" "github_oidc_role" {
   name               = "${upper(replace(var.project_name, "-", "_"))}_GITHUB_OIDC_ROLE"
   assume_role_policy = data.aws_iam_policy_document.github_oidc_assume_role_policy.json
-  
+
   tags = merge(
     local.common_tags,
     {
