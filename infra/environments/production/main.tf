@@ -82,3 +82,12 @@ module "alb" {
   public_subnet_ids  = module.vpc.public_subnet_ids
   security_group_ids = [module.security_group.alb_security_group_id]
 }
+
+module "ecs_cluster" {
+  source = "../../modules/ecs"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  container_insight = true
+}
