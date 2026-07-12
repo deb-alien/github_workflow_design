@@ -22,6 +22,10 @@ locals {
         {
           name  = "NODE_ENV"
           value = var.environment
+        },
+        {
+          name  = "PORT"
+          value = tostring(var.container_port)
         }
       ]
 
@@ -45,7 +49,7 @@ locals {
       healthCheck = {
         command = [
           "CMD-SHELL",
-          "curl -f http://localhost:${var.container_port}${var.health_check_path} || exit 1"
+          "curl -f http://localhost:${var.container_port}/${trimprefix(var.health_check_path, "/")} || exit 1"
         ]
         interval    = 30
         timeout     = 5
