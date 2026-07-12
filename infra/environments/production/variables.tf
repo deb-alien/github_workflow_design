@@ -76,5 +76,5 @@ variable "terraform_remote_state_bucket" {
 variable "terraform_remote_state_key" {
   description = "The S3 key for the Terraform remote state file."
   type        = string
-  default = "bootstrap/terraform.tfstate"
+  default     = "bootstrap/terraform.tfstate"
 }
