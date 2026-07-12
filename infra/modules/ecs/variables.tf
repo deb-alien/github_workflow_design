@@ -76,3 +76,9 @@ variable "target_group_arn" {
   description = "The ARN of the target group to associate with the ECS service."
   type        = string
 }
+
+variable "health_check_path" {
+  description = "The path for the health check endpoint."
+  type        = string
+  default     = "/api/health"
+}
