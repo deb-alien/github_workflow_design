@@ -50,3 +50,29 @@ variable "memory" {
   type        = number
   default     = 512
 }
+
+variable "container_port" {
+  description = "The port on which the container listens for traffic."
+  type        = number
+}
+
+variable "desired_count" {
+  description = "The desired number of tasks to run in the ECS service."
+  type        = number
+  default     = 2
+}
+
+variable "private_subnet_ids" {
+  description = "A list of private subnet IDs for the ECS service."
+  type        = list(string)
+}
+
+variable "security_group_ids" {
+  description = "A list of security group IDs to associate with the ECS service."
+  type        = list(string)
+}
+
+variable "target_group_arn" {
+  description = "The ARN of the target group to associate with the ECS service."
+  type        = string
+}

@@ -6,5 +6,6 @@ locals {
     Module      = "ECS"
   }
 
-  cluster_name = "${var.project_name}-${var.environment}-ecs-cluster"
+  cluster_name   = "${var.project_name}-${var.environment}-ecs-cluster"
+  container_name = "${var.project_name}-${var.environment}-api"
 }
