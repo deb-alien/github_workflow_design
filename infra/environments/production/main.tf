@@ -106,5 +106,5 @@ module "ecs_cluster" {
   private_subnet_ids = module.vpc.private_subnet_ids
   security_group_ids = [module.security_group.ecs_security_group_id]
   target_group_arn   = module.alb.target_group_arn
-  health_check_path = var.health_check_path
+  health_check_path  = var.health_check_path
 }
