@@ -1,30 +1,29 @@
 output "tf_state_bucket_name" {
-  value       = local.tf_state_bucket_name
+  value       = module.tf_state_bucket.tf_state_bucket_name
   description = "The name of the S3 bucket for storing Terraform state files"
 }
 
 output "tf_state_bucket_arn" {
-  value       = aws_s3_bucket.tf_state.arn
+  value       = module.tf_state_bucket.tf_state_bucket_arn
   description = "The ARN of the S3 bucket for storing Terraform state files"
 }
 
 output "github_oidc_role_arn" {
-  value       = aws_iam_role.github_oidc_role.arn
+  value       = module.oidc.github_oidc_role_arn
   description = "The ARN of the IAM role for GitHub Actions OIDC"
 }
 
 output "oidc_provider_arn" {
-  value       = aws_iam_openid_connect_provider.github_oidc.arn
+  value       = module.oidc.oidc_provider_arn
   description = "The ARN of the OIDC provider for GitHub Actions"
-
 }
 
-output "github_oidc_role_name" {
-  value       = aws_iam_role.github_oidc_role.name
-  description = "The name of the IAM role for GitHub Actions OIDC"
+output "ecr_repository_url" {
+  value       = module.ecr_repository.ecr_repository_url
+  description = "The URL of the ECR repository for storing Docker images"
 }
 
-output "tf_state_bucket_policy_name" {
-  value       = aws_iam_role_policy.tf_state_bucket_policy_attachment.name
-  description = "The name of the S3 bucket policy for Terraform state files"
+output "ecr_repository_name" {
+  value       = module.ecr_repository.ecr_repository_name
+  description = "The name of the ECR repository for storing Docker images"
 }
