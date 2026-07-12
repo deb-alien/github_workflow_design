@@ -34,7 +34,7 @@ output "nat_gateway_ids" {
 }
 
 output "nat_gateway_eip_ids" {
-  value       = var.enable_nat_gateway ? aws_eip.this[*].id : []
+  value       = var.enable_nat_gateway ? values(aws_eip.this)[*].id : []
   description = "The IDs of the NAT Gateway Elastic IPs"
 }
 

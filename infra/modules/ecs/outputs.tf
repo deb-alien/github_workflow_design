@@ -17,3 +17,8 @@ output "service_arn" {
   description = "The ARN of the ECS service"
   value       = aws_ecs_service.api.arn
 }
+
+output "auto_scaling_target_arn" {
+  description = "The ARN of the auto-scaling target for the ECS service"
+  value       = try(aws_appautoscaling_target.ecs[0].arn, null)
+}
