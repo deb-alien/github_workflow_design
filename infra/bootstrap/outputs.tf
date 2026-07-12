@@ -27,3 +27,8 @@ output "ecr_repository_name" {
   value       = module.ecr_repository.ecr_repository_name
   description = "The name of the ECR repository for storing Docker images"
 }
+
+output "ecr_repository_arn" {
+  value       = module.ecr_repository.ecr_repository_arn
+  description = "The ARN of the ECR repository for storing Docker images"
+}
