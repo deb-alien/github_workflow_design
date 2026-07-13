@@ -3,42 +3,14 @@
 # * ==============================================================================
 resource "aws_security_group" "alb" {
   name        = "${var.project_name}-${var.environment}-alb-sg"
-  description = "Security group for ALB"
+  description = "Security group for Application Load Balancer"
   vpc_id      = var.vpc_id
 
-  tags = merge(local.common_tags, { Name = "${var.project_name}-${var.environment}-alb-sg" })
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project_name}-${var.environment}-alb-sg"
+    }
+  )
 }
 
-resource "aws_vpc_security_group_ingress_rule" "alb_http" {
-  security_group_id = aws_security_group.alb.id
-  ip_protocol       = "tcp"
-  from_port         = 80
-  to_port           = 80
-  cidr_ipv4         = "0.0.0.0/0"
-  description       = "Allow HTTP traffic from anywhere"
-}
-
-resource "aws_vpc_security_group_ingress_rule" "alb_https" {
-  security_group_id = aws_security_group.alb.id
-  ip_protocol       = "tcp"
-  from_port         = 443
-  to_port           = 443
-  cidr_ipv4         = "0.0.0.0/0"
-  description       = "Allow HTTPS traffic from anywhere"
-}
-
-resource "aws_vpc_security_group_egress_rule" "alb_to_ecs" {
-  security_group_id            = aws_security_group.alb.id
-  referenced_security_group_id = aws_security_group.ecs.id
-  from_port                    = 3000
-  to_port                      = 3000
-  ip_protocol                  = "tcp"
-  description                  = "Allow traffic from ALB to ECS"
-}
-
-resource "aws_vpc_security_group_egress_rule" "alb_egress" {
-  security_group_id = aws_security_group.alb.id
-  ip_protocol       = "-1"
-  cidr_ipv4         = "0.0.0.0/0"
-  description       = "Allow all outbound traffic"
-}
