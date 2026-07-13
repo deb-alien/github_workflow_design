@@ -18,6 +18,16 @@ output "database_subnet_ids" {
   description = "The IDs of the database subnets"
 }
 
+output "vpce_interface_endpoints_ids" {
+  value       = module.vpc_endpoints.interface_endpoints
+  description = "Map of interface VPC endpoint IDs keyed by service name."
+}
+
+output "vpce_s3_gateway_endpoint_id" {
+  value       = module.vpc_endpoints.s3_gateway_endpoint_id
+  description = "The ID of the S3 gateway VPC endpoint"
+}
+
 output "load_balancer_dns_name" {
   value       = module.alb.load_balancer_dns_name
   description = "The DNS name of the ALB"
