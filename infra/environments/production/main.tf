@@ -24,10 +24,9 @@ module "vpc" {
 module "security_group" {
   source = "../../modules/security_group"
 
-  project_name   = var.project_name
-  environment    = var.environment
-  vpc_id         = module.vpc.vpc_id
-  vpc_cidr_block = var.vpc_cidr
+  project_name = var.project_name
+  environment  = var.environment
+  vpc_id       = module.vpc.vpc_id
 }
 
 module "iam" {
