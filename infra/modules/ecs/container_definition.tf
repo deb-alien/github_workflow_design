@@ -10,6 +10,7 @@ locals {
 
       readonlyRootFilesystem = false
 
+
       portMappings = [
         {
           containerPort = var.container_port

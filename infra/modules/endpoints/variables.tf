@@ -23,8 +23,8 @@ variable "private_route_table_ids" {
   type        = list(string)
 }
 
-variable "ecs_security_group_id" {
-  description = "The ID of the ECS security group."
+variable "vpce_security_group_id" {
+  description = "The ID of the VPC Endpoint security group."
   type        = string
 }
 

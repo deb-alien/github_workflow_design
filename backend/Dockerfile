@@ -59,7 +59,6 @@ COPY --from=build /app/dist ./dist
 COPY --from=build /app/package.json ./
 COPY --from=build /app/certs ./certs
 
-# Apply secure directory ownership permissions
 RUN chown -R nestjs:nodejs /app
 
 USER nestjs

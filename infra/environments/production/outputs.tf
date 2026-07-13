@@ -33,6 +33,11 @@ output "load_balancer_dns_name" {
   description = "The DNS name of the ALB"
 }
 
+output "domain_name" {
+  value       = module.route53.fqdn
+  description = "The fully qualified domain name of the Route53 record"
+}
+
 output "load_balancer_arn" {
   value       = module.alb.load_balancer_arn
   description = "The ARN of the ALB"

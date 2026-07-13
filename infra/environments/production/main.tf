@@ -24,9 +24,10 @@ module "vpc" {
 module "security_group" {
   source = "../../modules/security_group"
 
-  project_name = var.project_name
-  environment  = var.environment
-  vpc_id       = module.vpc.vpc_id
+  project_name   = var.project_name
+  environment    = var.environment
+  vpc_id         = module.vpc.vpc_id
+  vpc_cidr_block = var.vpc_cidr
 }
 
 module "iam" {
@@ -45,7 +46,7 @@ module "vpc_endpoints" {
 
   vpc_id                  = module.vpc.vpc_id
   private_subnets_id      = module.vpc.private_subnet_ids
-  ecs_security_group_id   = module.security_group.ecs_security_group_id
+  vpce_security_group_id  = module.security_group.vpce_security_group_id
   private_route_table_ids = module.vpc.private_route_table_ids
 }
 
@@ -84,6 +85,7 @@ module "alb" {
   enable_http2 = true
   idle_timeout = 60
 
+  custom_domain_name       = module.route53.fqdn
   certificate_arn          = module.acm.certificate_arn
   ssl_policy               = var.ssl_policy
   enable_delete_protection = false
