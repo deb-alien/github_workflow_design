@@ -26,7 +26,7 @@ module "ecr_repository" {
   project_name = var.project_name
   environment  = var.environment
 
-  repository_name            = "${var.project_name}-api"
+  repository_name            = "api-ecr-repo"
   image_tag_mutability       = var.image_tag_mutability
   scan_on_push               = var.scan_on_push
   keep_tagged_images         = var.keep_tagged_images
