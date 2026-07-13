@@ -1,6 +1,6 @@
-#* ==============================================================================
-#| APPLICATION LOAD BALANCER SECURITY GROUP
-#* ==============================================================================
+# * ==============================================================================
+# | APPLICATION LOAD BALANCER SECURITY GROUP
+# * ==============================================================================
 resource "aws_security_group" "alb" {
   name        = "${var.project_name}-${var.environment}-alb-sg"
   description = "Security group for ALB"
@@ -39,8 +39,6 @@ resource "aws_vpc_security_group_egress_rule" "alb_to_ecs" {
 resource "aws_vpc_security_group_egress_rule" "alb_egress" {
   security_group_id = aws_security_group.alb.id
   ip_protocol       = "-1"
-  from_port         = 0
-  to_port           = 0
   cidr_ipv4         = "0.0.0.0/0"
   description       = "Allow all outbound traffic"
 }

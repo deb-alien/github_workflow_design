@@ -1,6 +1,6 @@
-#* ==============================================================================
-#| ECS FARGATE CONTAINER SECURITY GROUP
-#* ==============================================================================
+# * ==============================================================================
+# | ECS FARGATE CONTAINER SECURITY GROUP
+# * ==============================================================================
 resource "aws_security_group" "ecs" {
   name        = "${var.project_name}-${var.environment}-ecs-sg"
   description = "Security group for ECS"
@@ -21,8 +21,6 @@ resource "aws_vpc_security_group_ingress_rule" "alb_to_ecs" {
 resource "aws_vpc_security_group_egress_rule" "ecs_egress" {
   security_group_id = aws_security_group.ecs.id
   ip_protocol       = "-1"
-  from_port         = 0
-  to_port           = 0
   cidr_ipv4         = "0.0.0.0/0"
   description       = "Allow all outbound traffic from ECS"
 }

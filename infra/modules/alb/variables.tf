@@ -72,3 +72,8 @@ variable "ssl_policy" {
   description = "The security policy that defines which ciphers and protocols are supported."
   default     = "ELBSecurityPolicy-TLS13-1-2-2021-06"
 }
+
+variable "custom_domain_name" {
+  description = "The custom domain name for the ALB."
+  type        = string
+}
