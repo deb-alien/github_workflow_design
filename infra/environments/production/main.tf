@@ -34,6 +34,7 @@ module "iam" {
 
   project_name = var.project_name
   environment  = var.environment
+  aws_region   = var.aws_region
 }
 
 module "vpc_endpoints" {
@@ -146,8 +147,8 @@ module "ecs_cluster" {
 
   container_insight = true
 
-  execution_role_arn = module.iam.ecs_task_execution_role_arn
-  task_role_arn      = module.iam.ecs_task_role_arn
+  execution_role_arn = module.iam.execution_role_arn
+  task_role_arn      = module.iam.task_role_arn
 
   cpu    = var.cpu
   memory = var.memory

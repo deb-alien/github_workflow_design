@@ -1,6 +1,10 @@
 resource "aws_acm_certificate" "this" {
-  domain_name       = local.wildcard_domain_name
+  domain_name       = var.domain_name
   validation_method = "DNS"
+
+  subject_alternative_names = [
+    local.wildcard_domain_name
+  ]
 
   lifecycle {
     create_before_destroy = true
@@ -9,7 +13,7 @@ resource "aws_acm_certificate" "this" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${var.project_name}-${var.environment}-wildcard"
+      Name = "${var.project_name}-${var.environment}-wildcard-certificate"
     }
   )
 }

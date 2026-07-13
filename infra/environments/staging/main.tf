@@ -34,6 +34,7 @@ module "iam" {
 
   project_name = var.project_name
   environment  = var.environment
+  aws_region   = var.aws_region
 }
 
 module "vpc_endpoints" {
@@ -132,6 +133,7 @@ module "rds" {
   multi_az = false
 
   #| Monitoring
+  rds_monitoring_role_arn        = module.iam.rds_monitoring_role_arn
   performance_insights_enabled   = true
   monitoring_interval            = 60
   enable_cloudwatch_logs_exports = ["postgresql"]
@@ -146,8 +148,8 @@ module "ecs_cluster" {
 
   container_insight = true
 
-  execution_role_arn = module.iam.ecs_task_execution_role_arn
-  task_role_arn      = module.iam.ecs_task_role_arn
+  execution_role_arn = module.iam.execution_role_arn
+  task_role_arn      = module.iam.task_role_arn
 
   cpu    = var.cpu
   memory = var.memory
