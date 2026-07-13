@@ -57,3 +57,13 @@ output "http_listener_arn" {
   value       = module.alb.http_listener_arn
   description = "The ARN of the HTTP listener"
 }
+
+output "database_endpoint" {
+  value       = module.rds.db_endpoint
+  description = "The endpoint of the RDS instance"
+}
+
+output "db_port" {
+  value       = module.rds.db_port
+  description = "The port of the RDS instance"
+}
