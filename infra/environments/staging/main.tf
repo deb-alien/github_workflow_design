@@ -36,6 +36,20 @@ module "iam" {
   environment  = var.environment
 }
 
+module "vpc_endpoints" {
+  source = "../../modules/endpoints"
+
+  aws_region   = var.aws_region
+  project_name = var.project_name
+  environment  = var.environment
+
+  vpc_id                  = module.vpc.vpc_id
+  private_subnets_id      = module.vpc.private_subnet_ids
+  ecs_security_group_id   = module.security_group.ecs_security_group_id
+  private_route_table_ids = module.vpc.private_route_table_ids
+
+}
+
 module "route53" {
   source = "../../modules/route53"
 
