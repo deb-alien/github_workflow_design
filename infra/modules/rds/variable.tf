@@ -113,5 +113,4 @@ variable "enable_cloudwatch_logs_exports" {
   description = "Whether to enable exporting of database logs to CloudWatch Logs"
   type        = list(string)
   default     = ["postgresql"]
-
 }
