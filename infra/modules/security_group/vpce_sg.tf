@@ -1,14 +1,12 @@
+# ==============================================================================
+#| VPC ENDPOINTS (ECR / SYSTEMS MANAGER / CLOUDWATCH) SECURITY GROUP
+# ==============================================================================
 resource "aws_security_group" "vpce" {
   name        = "${var.project_name}-${var.environment}-vpce-sg"
   description = "Security group for VPC Endpoint"
   vpc_id      = var.vpc_id
 
-  tags = merge(
-    local.common_tags,
-    {
-      Name = "${var.project_name}-${var.environment}-vpce-sg"
-    }
-  )
+  tags = merge(local.common_tags, { Name = "${var.project_name}-${var.environment}-vpce-sg" })
 }
 
 resource "aws_vpc_security_group_ingress_rule" "vpce_ingress" {

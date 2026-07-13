@@ -1,14 +1,12 @@
+#* ==============================================================================
+#| APPLICATION LOAD BALANCER SECURITY GROUP
+#* ==============================================================================
 resource "aws_security_group" "alb" {
   name        = "${var.project_name}-${var.environment}-alb-sg"
   description = "Security group for ALB"
   vpc_id      = var.vpc_id
 
-  tags = merge(
-    local.common_tags,
-    {
-      Name = "${var.project_name}-${var.environment}-alb-sg"
-    }
-  )
+  tags = merge(local.common_tags, { Name = "${var.project_name}-${var.environment}-alb-sg" })
 }
 
 resource "aws_vpc_security_group_ingress_rule" "alb_http" {
@@ -27,6 +25,15 @@ resource "aws_vpc_security_group_ingress_rule" "alb_https" {
   to_port           = 443
   cidr_ipv4         = "0.0.0.0/0"
   description       = "Allow HTTPS traffic from anywhere"
+}
+
+resource "aws_vpc_security_group_egress_rule" "alb_to_ecs" {
+  security_group_id            = aws_security_group.alb.id
+  referenced_security_group_id = aws_security_group.ecs.id
+  from_port                    = 3000
+  to_port                      = 3000
+  ip_protocol                  = "tcp"
+  description                  = "Allow traffic from ALB to ECS"
 }
 
 resource "aws_vpc_security_group_egress_rule" "alb_egress" {
