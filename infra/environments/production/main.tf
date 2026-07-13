@@ -97,6 +97,46 @@ module "alb" {
   security_group_ids = [module.security_group.alb_security_group_id]
 }
 
+module "rds" {
+  source = "../../modules/rds"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  #| Credentials
+  master_username = "admin-api-user"
+  master_password = "Password123!"
+
+  #| Network Configuration
+  db_subnet_ids         = module.vpc.database_subnet_ids
+  db_security_group_ids = [module.security_group.rds_security_group_id]
+
+  #| Instance Configuration and Engine Version
+  db_engine_version = "17.5"
+  db_instance_class = "db.t3.micro"
+
+  #| Storage Configuration
+  storage_type          = "gp3"
+  storage_encrypted     = true
+  allocated_storage     = 20
+  max_allocated_storage = 100
+
+  #| Backup and Maintenance
+  backup_window           = "03:00-04:00"
+  maintenance_window      = "sun:04:00-sun:05:00"
+  backup_retention_period = 7
+  delete_protection       = false
+  skip_final_snapshot     = true
+
+  #| High Availability
+  multi_az = false
+
+  #| Monitoring
+  performance_insights_enabled   = true
+  monitoring_interval            = 60
+  enable_cloudwatch_logs_exports = ["postgresql"]
+}
+
 module "ecs_cluster" {
   source = "../../modules/ecs"
 
