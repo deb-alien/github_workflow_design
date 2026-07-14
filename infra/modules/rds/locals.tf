@@ -10,4 +10,6 @@ locals {
   db_name                = "${var.project_name}_${var.environment}_db"
   postgres_major_version = split(".", var.db_engine_version)[0]
   parameter_family       = "postgres${local.postgres_major_version}"
+
+  rds_monitoring_role_name = "${var.project_name}-${var.environment}-rds-monitoring-role"
 }

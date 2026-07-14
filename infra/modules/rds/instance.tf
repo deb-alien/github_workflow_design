@@ -38,7 +38,8 @@ resource "aws_db_instance" "default" {
   backup_window            = var.backup_window
   delete_automated_backups = false
   skip_final_snapshot      = var.skip_final_snapshot
-  final_snapshot_identifier = (var.skip_final_snapshot
+  final_snapshot_identifier = (
+    var.skip_final_snapshot
     ? null
     : "${local.db_instance_identifier}-final"
   )
@@ -51,9 +52,9 @@ resource "aws_db_instance" "default" {
 
 
   #| Monitoring
+  monitoring_role_arn             = aws_iam_role.rds_enhanced_monitoring_role.arn
   performance_insights_enabled    = var.performance_insights_enabled
   monitoring_interval             = var.monitoring_interval
-  monitoring_role_arn             = var.rds_monitoring_role_arn
   enabled_cloudwatch_logs_exports = var.enable_cloudwatch_logs_exports
 
 

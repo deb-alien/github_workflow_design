@@ -42,3 +42,8 @@ output "db_parameter_group_name" {
   description = "The name of the DB parameter group"
   value       = aws_db_parameter_group.db_parameter_group.name
 }
+
+output "rds_monitoring_role_arn" {
+  description = "ARN of the RDS monitoring IAM role"
+  value       = aws_iam_role.rds_enhanced_monitoring_role.arn
+}
