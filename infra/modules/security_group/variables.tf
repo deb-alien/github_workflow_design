@@ -12,3 +12,9 @@ variable "vpc_id" {
   description = "The ID of the VPC where the ALB will be deployed."
   type        = string
 }
+
+variable "ecs_container_port" {
+  description = "The port on which the ECS container is listening."
+  type        = number
+  default     = 3000
+}

@@ -58,8 +58,8 @@ resource "aws_vpc_security_group_egress_rule" "alb_to_ecs" {
   referenced_security_group_id = aws_security_group.ecs.id
 
   ip_protocol = "tcp"
-  from_port   = 3000
-  to_port     = 3000
+  from_port   = var.ecs_container_port
+  to_port     = var.ecs_container_port
 
   description = "Forward traffic to ECS tasks"
 }

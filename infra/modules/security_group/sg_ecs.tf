@@ -24,8 +24,8 @@ resource "aws_vpc_security_group_ingress_rule" "alb_to_ecs" {
   referenced_security_group_id = aws_security_group.alb.id
 
   ip_protocol = "tcp"
-  from_port   = 3000
-  to_port     = 3000
+  from_port   = var.ecs_container_port
+  to_port     = var.ecs_container_port
 
   description = "Allow traffic from ALB"
 }
