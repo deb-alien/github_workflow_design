@@ -61,12 +61,12 @@ output "s3_bucket_arn" {
 #-----------------------------------------------------------------------------
 #| Route53 Outputs
 #-----------------------------------------------------------------------------
-output "api_record_fqdn" {
+output "api_domain_name" {
   value       = module.route53.api_record_fqdn
   description = "The fully qualified domain name of the Route53 record"
 }
 
-output "cdn_record_fqdns" {
+output "cdn_domain_names" {
   value       = module.route53.cdn_record_fqdns
   description = "The fully qualified domain names of the Route53 CDN records"
 }
@@ -117,8 +117,8 @@ output "cloudfront_distribution_domain_name" {
   description = "The domain name of the CloudFront distribution"
 }
 
-output "cloudfront_hosted_zone_id" {
-  value       = module.cloudfront.cloudfront_hosted_zone_id
+output "cloudfront_distribution_hosted_zone_id" {
+  value       = module.cloudfront.cloudfront_distribution_hosted_zone_id
   description = "The hosted zone ID of the CloudFront distribution"
 }
 

@@ -63,7 +63,7 @@ module "route53" {
   alb_zone_id  = module.alb.load_balancer_zone_id
 
   cloudfront_domain_name    = module.cloudfront.cloudfront_distribution_domain_name
-  cloudfront_hosted_zone_id = module.cloudfront.cloudfront_hosted_zone_id
+  cloudfront_hosted_zone_id = module.cloudfront.cloudfront_distribution_hosted_zone_id
   cdn_aliases               = local.cdn_aliases
 }
 
