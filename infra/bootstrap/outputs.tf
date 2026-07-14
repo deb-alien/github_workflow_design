@@ -39,3 +39,9 @@ output "ecr_repository_arn" {
   value       = module.ecr_repository.ecr_repository_arn
   description = "The ARN of the ECR repository for storing Docker images"
 }
+
+output "cloudfront_public_key_id" {
+  sensitive   = true
+  value       = aws_cloudfront_key_group.this.id
+  description = "The ID of the CloudFront key group"
+}
