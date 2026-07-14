@@ -8,7 +8,7 @@ data "aws_iam_policy_document" "application" {
       "ssm:GetParametersByPath"
     ]
     resources = [
-      "arn:${data.aws_partition.current.partition}:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${local.parameter_path}/*"
+      "arn:${data.aws_partition.current.partition}:ssm:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:parameter${local.parameter_path}/*"
     ]
   }
   statement {
@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "application" {
       variable = "kms:ViaService"
 
       values = [
-        "ssm.${data.aws_region.current.name}.amazonaws.com"
+        "ssm.${data.aws_region.current.region}.amazonaws.com"
       ]
     }
   }
