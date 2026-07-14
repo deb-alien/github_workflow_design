@@ -63,14 +63,24 @@ output "s3_bucket_arn" {
   description = "The ARN of the S3 bucket"
 }
 
+output "s3_bucket_regional_domain_name" {
+  value       = module.s3_bucket.bucket_regional_domain_name
+  description = "The regional domain name of the S3 bucket"
+
+}
+
 #-----------------------------------------------------------------------------
 #| Route53 Outputs
 #-----------------------------------------------------------------------------
-output "domain_name" {
-  value       = module.route53.fqdn
+output "api_record_fqdn" {
+  value       = module.route53.api_record_fqdn
   description = "The fully qualified domain name of the Route53 record"
 }
 
+output "cdn_record_fqdns" {
+  value       = module.route53.cdn_record_fqdns
+  description = "The fully qualified domain names of the Route53 CDN records"
+}
 #-----------------------------------------------------------------------------
 #| ALB Outputs
 #-----------------------------------------------------------------------------

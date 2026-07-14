@@ -20,10 +20,18 @@ data "aws_iam_policy_document" "bucket_access_policy_document" {
     sid       = "AllowECSTaskRoleAccess"
     actions   = local.ecs_object_actions
     resources = ["${aws_s3_bucket.this.arn}/*"]
+    principals {
+      type        = "AWS"
+      identifiers = [var.ecs_task_role_arn]
+    }
   }
   statement {
     sid       = "AllowECSTaskRoleListAccess"
     actions   = local.ecs_bucket_actions
     resources = [aws_s3_bucket.this.arn]
+    principals {
+      type        = "AWS"
+      identifiers = [var.ecs_task_role_arn]
+    }
   }
 }

@@ -27,3 +27,18 @@ variable "alb_zone_id" {
   description = "The zone ID of the ALB to create the Route53 record for"
   type        = string
 }
+
+variable "cdn_aliases" {
+  description = "The aliases for the CloudFront distribution"
+  type        = list(string)
+}
+
+variable "cloudfront_domain_name" {
+  description = "The domain name of the CloudFront distribution"
+  type        = string
+}
+
+variable "cloudfront_hosted_zone_id" {
+  description = "The hosted zone ID of the CloudFront distribution"
+  type        = string
+}

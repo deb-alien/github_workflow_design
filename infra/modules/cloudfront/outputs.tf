@@ -17,3 +17,8 @@ output "cloudfront_hosted_zone_id" {
   description = "The hosted zone ID of the CloudFront distribution"
   value       = aws_cloudfront_distribution.this.hosted_zone_id
 }
+
+output "cloudfront_distribution_aliases" {
+  description = "The aliases of the CloudFront distribution"
+  value       = var.aliases
+}
