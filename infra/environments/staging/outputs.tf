@@ -66,9 +66,14 @@ output "s3_bucket_arn" {
 #-----------------------------------------------------------------------------
 #| Route53 Outputs
 #-----------------------------------------------------------------------------
-output "domain_name" {
-  value       = module.route53.fqdn
+output "api_record_fqdn" {
+  value       = module.route53.api_record_fqdn
   description = "The fully qualified domain name of the Route53 record"
+}
+
+output "cdn_record_fqdns" {
+  value       = module.route53.cdn_record_fqdns
+  description = "The fully qualified domain names of the Route53 CDN records"
 }
 
 #-----------------------------------------------------------------------------
@@ -122,6 +127,11 @@ output "cloudfront_hosted_zone_id" {
   description = "The hosted zone ID of the CloudFront distribution"
 }
 
+output "cloudfront_distribution_aliases" {
+  value       = module.cloudfront.cloudfront_distribution_aliases
+  description = "The aliases of the CloudFront distribution"
+
+}
 #-----------------------------------------------------------------------------
 #| RDS Outputs
 #-----------------------------------------------------------------------------
@@ -139,7 +149,6 @@ output "db_name" {
   value       = module.rds.db_name
   description = "The name of the RDS database"
 }
-
 
 #-----------------------------------------------------------------------------
 #| ECS Outputs
