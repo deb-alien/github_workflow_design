@@ -2,16 +2,11 @@
 # | ECS FARGATE CONTAINER SECURITY GROUP
 # * ==============================================================================
 resource "aws_security_group" "ecs" {
-  name        = "${var.project_name}-${var.environment}-ecs-sg"
+  name        = local.ecs_security_group_name
   description = "Security group for ECS tasks"
   vpc_id      = var.vpc_id
 
-  tags = merge(
-    local.common_tags,
-    {
-      Name = "${var.project_name}-${var.environment}-ecs-sg"
-    }
-  )
+  tags = merge(local.common_tags, { Name = local.ecs_security_group_name })
 }
 
 /**
