@@ -68,3 +68,13 @@ variable "kms_key_arn" {
   type        = string
   default     = null
 }
+
+variable "cloudfront_distribution_arn" {
+  description = "The ARN of the CloudFront distribution associated with the S3 bucket."
+  type        = string
+}
+
+variable "ecs_task_role_arn" {
+  description = "The ARN of the ECS task role that needs access to the S3 bucket."
+  type        = string
+}
