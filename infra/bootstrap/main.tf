@@ -3,7 +3,7 @@
   * It defines the necessary modules and resources required for setting up the initial state.
   */
 module "tf_state_bucket" {
-  source = "../modules/s3"
+  source = "./modules/s3"
 
   project_name = var.project_name
   environment  = var.environment
@@ -11,7 +11,7 @@ module "tf_state_bucket" {
   bucket_name = local.tf_state_bucket_name
 }
 module "oidc" {
-  source = "../modules/OIDC"
+  source = "./modules/oidc"
 
   project_name = var.project_name
   environment  = var.environment
@@ -21,7 +21,7 @@ module "oidc" {
 }
 
 module "ecr_repository" {
-  source = "../modules/ecr"
+  source = "./modules/ecr"
 
   project_name = var.project_name
   environment  = var.environment

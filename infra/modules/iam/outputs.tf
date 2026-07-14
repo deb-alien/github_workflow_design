@@ -38,7 +38,4 @@ output "application_policy_name" {
   value       = aws_iam_policy.application.name
 }
 
-output "rds_monitoring_role_arn" {
-  description = "ARN of the RDS monitoring IAM role"
-  value       = aws_iam_role.rds_enhanced_monitoring_role.arn
-}
+

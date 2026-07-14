@@ -45,11 +45,6 @@ output "ecs_task_role_arn" {
   description = "The ARN of the ECS task IAM role."
 }
 
-output "rds_monitoring_role_arn" {
-  value       = module.iam.rds_monitoring_role_arn
-  description = "The ARN of the RDS monitoring IAM role."
-}
-
 #-----------------------------------------------------------------------------
 #| S3 Bucket Outputs
 #-----------------------------------------------------------------------------
@@ -66,12 +61,12 @@ output "s3_bucket_arn" {
 #-----------------------------------------------------------------------------
 #| Route53 Outputs
 #-----------------------------------------------------------------------------
-output "api_record_fqdn" {
+output "api_domain_name" {
   value       = module.route53.api_record_fqdn
   description = "The fully qualified domain name of the Route53 record"
 }
 
-output "cdn_record_fqdns" {
+output "cdn_domain_names" {
   value       = module.route53.cdn_record_fqdns
   description = "The fully qualified domain names of the Route53 CDN records"
 }
@@ -122,8 +117,8 @@ output "cloudfront_distribution_domain_name" {
   description = "The domain name of the CloudFront distribution"
 }
 
-output "cloudfront_hosted_zone_id" {
-  value       = module.cloudfront.cloudfront_hosted_zone_id
+output "cloudfront_distribution_hosted_zone_id" {
+  value       = module.cloudfront.cloudfront_distribution_hosted_zone_id
   description = "The hosted zone ID of the CloudFront distribution"
 }
 
@@ -148,6 +143,11 @@ output "db_port" {
 output "db_name" {
   value       = module.rds.db_name
   description = "The name of the RDS database"
+}
+
+output "rds_monitoring_role_arn" {
+  value       = module.rds.rds_monitoring_role_arn
+  description = "The ARN of the RDS monitoring IAM role."
 }
 
 #-----------------------------------------------------------------------------

@@ -114,8 +114,3 @@ variable "enable_cloudwatch_logs_exports" {
   type        = list(string)
   default     = ["postgresql"]
 }
-
-variable "rds_monitoring_role_arn" {
-  description = "The ARN of the IAM role for RDS Enhanced Monitoring"
-  type        = string
-}
