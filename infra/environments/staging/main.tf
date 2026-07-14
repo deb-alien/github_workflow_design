@@ -204,7 +204,6 @@ module "rds" {
   multi_az = false # for learning purposes, in production you should set this to true to enable Multi-AZ deployments for high availability
 
   #| Monitoring
-  rds_monitoring_role_arn        = module.iam.rds_monitoring_role_arn
   performance_insights_enabled   = true
   monitoring_interval            = 60
   enable_cloudwatch_logs_exports = ["postgresql"]

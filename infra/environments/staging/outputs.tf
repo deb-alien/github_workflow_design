@@ -45,11 +45,6 @@ output "ecs_task_role_arn" {
   description = "The ARN of the ECS task IAM role."
 }
 
-output "rds_monitoring_role_arn" {
-  value       = module.iam.rds_monitoring_role_arn
-  description = "The ARN of the RDS monitoring IAM role."
-}
-
 #-----------------------------------------------------------------------------
 #| S3 Bucket Outputs
 #-----------------------------------------------------------------------------
@@ -148,6 +143,11 @@ output "db_port" {
 output "db_name" {
   value       = module.rds.db_name
   description = "The name of the RDS database"
+}
+
+output "rds_monitoring_role_arn" {
+  value       = module.rds.rds_monitoring_role_arn
+  description = "The ARN of the RDS monitoring IAM role."
 }
 
 #-----------------------------------------------------------------------------
