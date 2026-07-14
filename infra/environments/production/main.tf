@@ -136,7 +136,6 @@ module "cloudfront" {
   project_name = var.project_name
   environment  = var.environment
 
-  bucket_name                 = module.s3_bucket.s3_bucket_name
   bucket_regional_domain_name = module.s3_bucket.bucket_regional_domain_name
   aliases                     = local.cdn_aliases
   certificate_arn             = module.acm.certificate_arn

@@ -76,6 +76,7 @@ output "cdn_domain_names" {
   value       = module.route53.cdn_record_fqdns
   description = "The fully qualified domain names of the Route53 CDN records"
 }
+
 #-----------------------------------------------------------------------------
 #| ALB Outputs
 #-----------------------------------------------------------------------------
