@@ -146,7 +146,7 @@ output "db_name" {
 }
 
 output "rds_monitoring_role_arn" {
-  value       = module.iam.rds_monitoring_role_arn
+  value       = module.rds.rds_monitoring_role_arn
   description = "The ARN of the RDS monitoring IAM role."
 }
 
