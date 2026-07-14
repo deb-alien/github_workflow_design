@@ -61,6 +61,10 @@ module "route53" {
 
   alb_dns_name = module.alb.load_balancer_dns_name
   alb_zone_id  = module.alb.load_balancer_zone_id
+
+  cloudfront_domain_name    = module.cloudfront.cloudfront_distribution_domain_name
+  cloudfront_hosted_zone_id = module.cloudfront.cloudfront_hosted_zone_id
+  cdn_aliases               = local.cdn_aliases
 }
 
 module "acm" {
@@ -79,7 +83,7 @@ module "s3_bucket" {
   project_name = var.project_name
   environment  = var.environment
 
-  bucket_name       = "${var.project_name}-${var.environment}-storage"
+  bucket_name       = "${var.project_name}-${var.environment}-storage-06-11-2026"
   enable_versioning = true
   kms_key_arn       = null
 
@@ -134,13 +138,10 @@ module "cloudfront" {
 
   bucket_name                 = module.s3_bucket.s3_bucket_name
   bucket_regional_domain_name = module.s3_bucket.bucket_regional_domain_name
-  aliases = [
-    "cdn.${var.root_domain_name}",
-  ]
-  certificate_arn     = module.acm.certificate_arn
-  wait_for_deployment = true
-  pricing_class       = "PriceClass_100"
-
+  aliases                     = local.cdn_aliases
+  certificate_arn             = module.acm.certificate_arn
+  wait_for_deployment         = true
+  pricing_class               = "PriceClass_100"
 }
 
 module "alb" {
@@ -155,7 +156,7 @@ module "alb" {
   enable_http2 = true
   idle_timeout = 60
 
-  custom_domain_name       = module.route53.fqdn
+  custom_domain_name       = module.route53.api_record_fqdn
   certificate_arn          = module.acm.certificate_arn
   ssl_policy               = var.ssl_policy
   enable_delete_protection = false
@@ -272,6 +273,12 @@ module "ssm_parameter" {
       path        = "database/port"
       value       = module.rds.db_port
       description = "The port of the RDS database."
+    }
+
+    s3_bucket_name = {
+      path        = "s3/bucket_name"
+      value       = module.s3_bucket.s3_bucket_name
+      description = "The name of the S3 bucket."
     }
   }
 }
