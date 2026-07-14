@@ -25,24 +25,17 @@ variable "enable_versioning" {
   default     = true
 }
 
-variable "cors_allowed_origins" {
-  description = "A list of allowed origins for CORS configuration."
-  type        = list(string)
-  default     = []
-}
+# variable "cors_allowed_origins" {
+#   description = "A list of allowed origins for CORS configuration."
+#   type        = list(string)
+#   default     = []
+# }
 
-variable "cors_allowed_methods" {
-  description = "A list of allowed HTTP methods for CORS configuration."
-  type        = list(string)
-  default     = ["GET", "PUT", "HEAD"]
-}
-
-
-variable "lifecycle_temp_expiration_days" {
-  description = "The number of days after which temporary objects in the S3 bucket will expire."
-  type        = number
-  default     = 7
-}
+# variable "cors_allowed_methods" {
+#   description = "A list of allowed HTTP methods for CORS configuration."
+#   type        = list(string)
+#   default     = ["GET", "PUT", "HEAD"]
+# }
 
 variable "lifecycle_rules" {
   description = "Lifecycle rules for the bucket"
