@@ -5,4 +5,5 @@ locals {
     ManagedBy   = "Terraform"
     Module      = "Cloudfront"
   }
+  parameter_prefix = "/${var.project_name}/${var.environment}"
 }

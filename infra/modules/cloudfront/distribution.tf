@@ -21,6 +21,7 @@ resource "aws_cloudfront_distribution" "this" {
     compress                   = true
     cache_policy_id            = data.aws_cloudfront_cache_policy.managed.id
     response_headers_policy_id = aws_cloudfront_response_headers_policy.this.id
+    trusted_key_groups         = [aws_cloudfront_key_group.this.id]
   }
 
   restrictions {
