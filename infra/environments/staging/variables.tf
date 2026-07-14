@@ -96,3 +96,15 @@ variable "health_check_path" {
   type        = string
   default     = "/api/health"
 }
+
+variable "database_username" {
+  description = "The username for the database."
+  type        = string
+  default     = "admin-api-user"
+}
+
+variable "database_password" {
+  description = "The password for the database user."
+  type        = string
+  sensitive   = true
+}
