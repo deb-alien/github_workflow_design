@@ -1,8 +1,3 @@
-output "rds_monitoring_role_arn" {
-  description = "The ARN of the RDS monitoring IAM role."
-  value       = aws_iam_role.rds_enhanced_monitoring_role.arn
-}
-
 output "rds_instance_id" {
   description = "The ID of the RDS instance"
   value       = aws_db_instance.default.id

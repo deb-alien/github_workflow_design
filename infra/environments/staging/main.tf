@@ -104,8 +104,8 @@ module "rds" {
   environment  = var.environment
 
   #| Credentials
-  master_username = "admin-api-user"
-  master_password = "Password123!"
+  master_username = var.database_username
+  master_password = var.database_password
 
   #| Network Configuration
   db_subnet_ids         = module.vpc.database_subnet_ids
@@ -123,7 +123,7 @@ module "rds" {
 
   #| Backup and Maintenance
   backup_window           = "03:00-04:00"
-  maintenance_window      = "sun:04:00-sun:05:00"
+  maintenance_window      = "Mon:00:00-Mon:03:00"
   backup_retention_period = 7
   delete_protection       = false
   skip_final_snapshot     = true
@@ -132,6 +132,7 @@ module "rds" {
   multi_az = false
 
   #| Monitoring
+  rds_monitoring_role_arn        = module.iam.rds_monitoring_role_arn
   performance_insights_enabled   = true
   monitoring_interval            = 60
   enable_cloudwatch_logs_exports = ["postgresql"]
@@ -146,8 +147,8 @@ module "ecs_cluster" {
 
   container_insight = true
 
-  execution_role_arn = module.iam.ecs_task_execution_role_arn
-  task_role_arn      = module.iam.ecs_task_role_arn
+  execution_role_arn = module.iam.execution_role_arn
+  task_role_arn      = module.iam.task_role_arn
 
   cpu    = var.cpu
   memory = var.memory
@@ -169,4 +170,34 @@ module "ecs_cluster" {
   min_capacity              = 1
   scale_in_cooldown         = 300
   scale_out_cooldown        = 60
+}
+
+module "ssm_parameter" {
+  source = "../../modules/secrets"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  secrets = {
+    database_password = {
+      path        = "database/password"
+      value       = var.database_password
+      description = "The password for the database user."
+    }
+    database_username = {
+      path        = "database/username"
+      value       = var.database_username
+      description = "The username for the database."
+    }
+    database_host = {
+      path        = "database/host"
+      value       = module.rds.db_endpoint
+      description = "The endpoint of the RDS database."
+    }
+    database_port = {
+      path        = "database/port"
+      value       = module.rds.db_port
+      description = "The port of the RDS database."
+    }
+  }
 }
