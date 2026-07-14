@@ -6,3 +6,4 @@ locals {
     "cdn.${var.root_domain_name}",
   ]
 }
+
