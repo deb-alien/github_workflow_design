@@ -31,3 +31,7 @@ data "aws_iam_policy_document" "rds_monitoring_assume_role" {
 data "aws_caller_identity" "current" {}
 data "aws_partition" "current" {}
 data "aws_region" "current" {}
+
+data "aws_kms_key" "ssm" {
+  key_id = "alias/aws/ssm"
+}

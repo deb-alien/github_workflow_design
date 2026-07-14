@@ -19,7 +19,7 @@ data "aws_iam_policy_document" "application" {
       "kms:Decrypt"
     ]
 
-    resources = ["*"]
+    resources = [data.aws_kms_key.ssm.arn]
 
     condition {
       test     = "StringEquals"
