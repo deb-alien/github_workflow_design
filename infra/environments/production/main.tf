@@ -32,8 +32,9 @@ module "security_group" {
 module "iam" {
   source = "../../modules/iam"
 
-  project_name = var.project_name
-  environment  = var.environment
+  project_name  = var.project_name
+  environment   = var.environment
+  s3_bucket_arn = module.s3_bucket.s3_bucket_arn
 }
 
 module "vpc_endpoints" {
@@ -70,6 +71,76 @@ module "acm" {
 
   domain_name    = var.root_domain_name
   hosted_zone_id = module.route53.zone_id
+}
+
+module "s3_bucket" {
+  source = "../../modules/s3_bucket"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  bucket_name       = "${var.project_name}-${var.environment}-storage"
+  enable_versioning = true
+  kms_key_arn       = null
+
+  cloudfront_distribution_arn = module.cloudfront.cloudfront_distribution_arn
+  ecs_task_role_arn           = module.iam.task_role_arn
+
+  lifecycle_rules = [
+    {
+      id      = "avatars"
+      prefix  = "avatars/"
+      enabled = true
+      transition = {
+        days          = 30
+        storage_class = "STANDARD_IA"
+      }
+      expiration = {
+        days = 365
+      }
+    },
+    {
+      id      = "posts"
+      prefix  = "posts/"
+      enabled = true
+      transition = {
+        days          = 30
+        storage_class = "STANDARD_IA"
+      }
+      expiration = {
+        days = 365
+      }
+    },
+    {
+      id      = "attachments"
+      prefix  = "attachments/"
+      enabled = true
+      transition = {
+        days          = 30
+        storage_class = "STANDARD_IA"
+      }
+      expiration = {
+        days = 365
+      }
+    }
+  ]
+}
+
+module "cloudfront" {
+  source = "../../modules/cloudfront"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  bucket_name                 = module.s3_bucket.s3_bucket_name
+  bucket_regional_domain_name = module.s3_bucket.bucket_regional_domain_name
+  aliases = [
+    "cdn.${var.root_domain_name}",
+  ]
+  certificate_arn     = module.acm.certificate_arn
+  wait_for_deployment = true
+  pricing_class       = "PriceClass_100"
+
 }
 
 module "alb" {

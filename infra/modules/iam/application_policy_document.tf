@@ -30,4 +30,18 @@ data "aws_iam_policy_document" "application" {
       ]
     }
   }
+
+  statement {
+    sid       = "ApplicationS3Access"
+    effect    = "Allow"
+    actions   = ["s3:ListBucket"]
+    resources = [var.s3_bucket_arn]
+  }
+
+  statement {
+    sid       = "ApplicationS3ObjectAccess"
+    effect    = "Allow"
+    actions   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListMultipartUploadParts", "s3:AbortMultipartUpload"]
+    resources = ["${var.s3_bucket_arn}/*"]
+  }
 }

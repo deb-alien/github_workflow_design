@@ -51,6 +51,19 @@ output "rds_monitoring_role_arn" {
 }
 
 #-----------------------------------------------------------------------------
+#| S3 Bucket Outputs
+#-----------------------------------------------------------------------------
+output "s3_bucket_name" {
+  value       = module.s3_bucket.s3_bucket_name
+  description = "The name of the S3 bucket"
+}
+
+output "s3_bucket_arn" {
+  value       = module.s3_bucket.s3_bucket_arn
+  description = "The ARN of the S3 bucket"
+}
+
+#-----------------------------------------------------------------------------
 #| Route53 Outputs
 #-----------------------------------------------------------------------------
 output "domain_name" {
@@ -84,6 +97,29 @@ output "target_group_arn" {
 output "http_listener_arn" {
   value       = module.alb.http_listener_arn
   description = "The ARN of the HTTP listener"
+}
+
+#-----------------------------------------------------------------------------
+#| CloudFront Outputs
+#-----------------------------------------------------------------------------
+output "cloudfront_distribution_id" {
+  value       = module.cloudfront.cloudfront_distribution_id
+  description = "The ID of the CloudFront distribution"
+}
+
+output "cloudfront_distribution_arn" {
+  value       = module.cloudfront.cloudfront_distribution_arn
+  description = "The ARN of the CloudFront distribution"
+}
+
+output "cloudfront_distribution_domain_name" {
+  value       = module.cloudfront.cloudfront_distribution_domain_name
+  description = "The domain name of the CloudFront distribution"
+}
+
+output "cloudfront_hosted_zone_id" {
+  value       = module.cloudfront.cloudfront_hosted_zone_id
+  description = "The hosted zone ID of the CloudFront distribution"
 }
 
 #-----------------------------------------------------------------------------
