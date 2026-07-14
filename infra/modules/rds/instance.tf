@@ -17,7 +17,7 @@ resource "aws_db_instance" "default" {
   #| Credentials
   db_name  = local.db_name
   username = var.master_username
-  password = var.master_password
+  password = random_password.password.result
   port     = var.db_port
 
   #| Network Configuration
@@ -56,7 +56,6 @@ resource "aws_db_instance" "default" {
   performance_insights_enabled    = var.performance_insights_enabled
   monitoring_interval             = var.monitoring_interval
   enabled_cloudwatch_logs_exports = var.enable_cloudwatch_logs_exports
-
 
   tags = merge(
     local.common_tags,

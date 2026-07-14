@@ -5,7 +5,16 @@ locals {
     ManagedBy   = "Terraform"
     Module      = "RDS"
   }
-  parameter_prefix         = "/${var.project_name}/${var.environment}"
+  parameter_prefix = "/${var.project_name}/${var.environment}"
+
+  ssm = {
+    db_username = "${local.parameter_prefix}/rds/db_username"
+    db_password = "${local.parameter_prefix}/rds/db_password"
+    db_host     = "${local.parameter_prefix}/rds/db_host"
+    db_port     = "${local.parameter_prefix}/rds/db_port"
+    db_name     = "${local.parameter_prefix}/rds/db_name"
+  }
+
   db_instance_identifier   = "${var.project_name}-${var.environment}-db"
   db_name                  = "${var.project_name}_${var.environment}_db"
   postgres_major_version   = split(".", var.db_engine_version)[0]
