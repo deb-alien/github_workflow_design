@@ -19,7 +19,7 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
     compress               = true
-    cache_policy_id        = data.aws_cloudfront_cache_policy.managed_cache_policy_with_query_strings.id
+    cache_policy_id        = data.aws_cloudfront_cache_policy.managed.id
   }
 
   restrictions {
