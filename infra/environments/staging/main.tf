@@ -181,6 +181,7 @@ module "rds" {
   #| Network Configuration
   db_subnet_ids         = module.vpc.database_subnet_ids
   db_security_group_ids = [module.security_group.rds_security_group_id]
+  db_port               = 5432
 
   #| Instance Configuration and Engine Version
   db_engine_version = "17.5"
