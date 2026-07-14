@@ -15,7 +15,6 @@ variable "secrets" {
     value       = string
     description = optional(string)
   }))
-  sensitive = true
 }
 
 variable "kms_key_arn" {
