@@ -1,4 +1,4 @@
-resource "aws_route53_record" "alias" {
+resource "aws_route53_record" "api" {
   zone_id = data.aws_route53_zone.this.zone_id
 
   name = local.record_name
