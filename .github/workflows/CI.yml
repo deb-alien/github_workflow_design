@@ -98,19 +98,8 @@ jobs:
                   terraform plan \
                   -out=${{ matrix.environment }}.tfplan \
                   -var="environment=${{ matrix.environment }}" \
-                  -var="aws_region=${{ vars.TF_VAR_AWS_REGION }}" \
-                  -var="project_name=${{ vars.TF_VAR_PROJECT_NAME }}" \
-                  -var="vpc_cidr=${{ vars.TF_VAR_VPC_CIDR }}" \
-                  -var="availability_zone_count=${{ vars.TF_VAR_AVAILABILITY_ZONE_COUNT }}" \
-                  -var="ssl_policy=${{ secrets.TF_VAR_SSL_POLICY }}" \
-                  -var="root_domain_name=${{ vars.TF_VAR_ROOT_DOMAIN_NAME }}" \
-                  -var="sub_domain=${{ vars.TF_VAR_SUB_DOMAIN }}" \
+                  -var="aws_region=${{ vars.AWS_REGION }}" \
+                  -var="project_name=${{ vars.PROJECT_NAME }}" \
+                  -var="root_domain_name=${{ vars.ROOT_DOMAIN }}" \
+                  -var="sub_domain=${{ vars.SUB_DOMAIN }}" \
                   -var="image_tag=${{ github.sha }}" \
-                  -var="cpu=256" \
-                  -var="memory=512" \
-                  -var="container_port=${{ vars.TF_VAR_CONTAINER_PORT }}" \
-                  -var="desired_count=${{ vars.TF_VAR_DESIRED_COUNT }}" \
-                  -var="health_check_path=${{ vars.TF_VAR_HEALTH_CHECK_PATH }}" \
-                  -var="terraform_remote_state_bucket=${{ secrets.TF_VAR_TERRAFORM_REMOTE_STATE_BUCKET }}" \
-                  -var="terraform_remote_state_key=${{ secrets.TF_VAR_TERRAFORM_REMOTE_STATE_KEY }}" \
-                  -var="database_username=${{ secrets.TF_VAR_DATABASE_USERNAME }}" \
