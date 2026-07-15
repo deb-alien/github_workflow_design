@@ -30,11 +30,6 @@ inputs:
         required: false
         default: ''
 
-    push_latest:
-        description: "Whether to push the image with the 'latest' tag"
-        required: false
-        default: 'false'
-
 runs:
     using: composite
     steps:
