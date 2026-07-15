@@ -81,7 +81,6 @@ jobs:
             - name: Push Docker Image to ECR
               run: |
                   docker push ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG
-                  docker push ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:latest
 
             - name: Download Current Task Definition
               run: |
