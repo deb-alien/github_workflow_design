@@ -61,9 +61,17 @@ data "aws_iam_policy_document" "ecr_repository_policy" {
 
   #| Standard repository read and write access rules
   statement {
-    sid       = "AllowGitHubActionsToAccessECRRepository"
-    effect    = "Allow"
-    actions   = ["ecr:BatchCheckLayerAvailability", "ecr:GetDownloadUrlForLayer", "ecr:BatchGetImage", "ecr:PutImage"]
+    sid    = "AllowGitHubActionsToAccessECRRepository"
+    effect = "Allow"
+    actions = [
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:BatchGetImage",
+      "ecr:CompleteLayerUpload",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:InitiateLayerUpload",
+      "ecr:PutImage",
+      "ecr:UploadLayerPart",
+    ]
     resources = [var.ecr_repository_arn]
   }
 }
