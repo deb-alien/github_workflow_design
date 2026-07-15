@@ -70,7 +70,6 @@ jobs:
                   terraform plan \
                    -input=false \
                    -out=tfplan \
-                   -no-color \
                    -detailed-exitcode
                   terraform show -no-color tfplan > plan.txt
 
