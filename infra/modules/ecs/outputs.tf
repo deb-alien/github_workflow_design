@@ -22,3 +22,8 @@ output "auto_scaling_target_arn" {
   description = "The ARN of the auto-scaling target for the ECS service"
   value       = try(aws_appautoscaling_target.ecs[0].arn, null)
 }
+
+output "container_name" {
+  description = "The name of the container in the ECS task definition"
+  value       = jsondecode(aws_ecs_task_definition.api.container_definitions)[0].name
+}
