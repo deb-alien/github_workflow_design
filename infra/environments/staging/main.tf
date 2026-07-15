@@ -269,8 +269,8 @@ module "elasticache" {
   environment  = var.environment
 
   #| Engine Configuration
-  engine_version = "8.0"
-  node_type      = "cache.t3g.micro"
+  engine_version = "9.1"
+  node_type      = "cache.t2.micro"
 
   #| Network Configuration
   database_subnet_ids            = module.vpc.database_subnet_ids
