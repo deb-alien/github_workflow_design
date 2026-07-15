@@ -56,18 +56,15 @@ jobs:
           name: terraform-production-output
           path: ./output 
           search_artifacts: true
-
+          
+      - name: verify artifact
+        run: |
+          ls -ll
+          ls -r ./output/output.json
+          
       - name: Read and Export Terraform Output Variables
         run: |
-          echo "Reading Terraform output from downloaded artifacts..."
-          
-          #| Verify file presence to fail-fast if artifact layout changes
-          if [ ! -f "./output/terraform-production-output/output.json" ]; then
-            echo "::error::Metadata file not found at expected path!"
-            exit 1
-          fi
-          
-          JSON_PATH="./output/terraform-production-output/output.json"
+          JSON_PATH="./output/output.json"
           echo "ECR_REPOSITORY_NAME=$(jq -r '.ecr_repository_name.value' $JSON_PATH)" >> $GITHUB_ENV
           echo "ECS_CLUSTER_NAME=$(jq -r '.ecs_cluster_name.value' $JSON_PATH)" >> $GITHUB_ENV
           echo "ECS_SERVICE_NAME=$(jq -r '.ecs_service_name.value' $JSON_PATH)" >> $GITHUB_ENV
