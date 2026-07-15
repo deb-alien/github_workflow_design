@@ -1,3 +1,9 @@
+/**
+  ** Terraform configuration for the production environment
+  ** This file defines the infrastructure resources and modules required to deploy the application in a production environment.
+  ** It includes networking, security, storage, compute, and monitoring components.
+*/
+
 ## ==============================================================================
 ## PHASE 1: CORE NETWORKING & SECURITY FOUNDATION
 ## ==============================================================================
