@@ -31,10 +31,10 @@ jobs:
 
         steps:
             - name: Checkout Code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: Setup AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v4
+              uses: aws-actions/configure-aws-credentials@v6
               with:
                   role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
                   aws-region: ${{ vars.AWS_REGION }}
@@ -44,7 +44,7 @@ jobs:
               uses: aws-actions/amazon-ecr-login@v2
 
             - name: Setup Docker Buildx
-              uses: docker/setup-buildx-action@v3
+              uses: docker/setup-buildx-action@v4
 
             - name: Download Artifacts from Terraform Apply Workflow
               uses: dawidd6/action-download-artifact@v21
@@ -91,23 +91,22 @@ jobs:
             - name: Update Task Definition
               run: |
                   run: |
-                    IMAGE="${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG"
-                    jq \
-                      '
-                      del(
-                        .taskDefinitionArn,
-                        .revision,
-                        .status,
-                        .requiresAttributes,
-                        .compatibilities,
-                        .registeredAt,
-                        .registeredBy
-                      )
-                      | .containerDefinitions[0].image = $IMAGE
-                      ' \
-                      task-definition.json > current_task_definition.json
-
+                      IMAGE="${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG"
+                      jq --arg IMAGE "$IMAGE" \
+                        '
+                        del(
+                          .taskDefinitionArn,
+                          .revision,
+                          .status,
+                          .requiresAttributes,
+                          .compatibilities,
+                          .registeredAt,
+                          .registeredBy
+                        )
+                        | .containerDefinitions[0].image = $IMAGE
+                        ' \
+                        current_task_definition.json > updated_task_definition.json
             - name: Show Task Definition Before Update
               run: |
                   echo "Current Task Definition:"
-                  cat current_task_definition.json
+                  cat updated_task_definition.json
