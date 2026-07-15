@@ -47,7 +47,7 @@ runs:
         - name: Validate Output File
           shell: bash
           run: |
-              if [ ! -f terraform-output/terraform-output.json ]; then
+              if [ ! -f terraform-output/output.json ]; then
                   echo "Terraform output file not found!"
                   exit 1
               fi
@@ -56,7 +56,7 @@ runs:
           id: outputs
           shell: bash
           run: |
-              OUTPUT_FILE="terraform-output/terraform-output.json"
+              OUTPUT_FILE="terraform-output/output.json"
               if [ ! -f "$OUTPUT_FILE" ]; then
                   echo "Terraform output file not found!"
                   exit 1
