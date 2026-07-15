@@ -6,6 +6,7 @@ locals {
     Module      = "ECS"
   }
 
-  cluster_name   = "${var.project_name}-${var.environment}-ecs-cluster"
-  container_name = "${var.project_name}-${var.environment}-api"
+  cluster_name   = "api-ecs-cluster-${var.environment}"
+  container_name = "api-container-${var.environment}"
+  task_family    = "api-task-definition-${var.environment}"
 }
