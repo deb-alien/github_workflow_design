@@ -90,22 +90,21 @@ jobs:
 
             - name: Update Task Definition
               run: |
-                  run: |
-                      IMAGE="${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG"
-                      jq --arg IMAGE "$IMAGE" \
-                        '
-                        del(
-                          .taskDefinitionArn,
-                          .revision,
-                          .status,
-                          .requiresAttributes,
-                          .compatibilities,
-                          .registeredAt,
-                          .registeredBy
-                        )
-                        | .containerDefinitions[0].image = $IMAGE
-                        ' \
-                        current_task_definition.json > updated_task_definition.json
+                  IMAGE="${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG"
+                  jq --arg IMAGE "$IMAGE" \
+                    '
+                    del(
+                      .taskDefinitionArn,
+                      .revision,
+                      .status,
+                      .requiresAttributes,
+                      .compatibilities,
+                      .registeredAt,
+                      .registeredBy
+                    )
+                    | .containerDefinitions[0].image = $IMAGE
+                    ' \
+                    current_task_definition.json > updated_task_definition.json
             - name: Show Task Definition Before Update
               run: |
                   echo "Current Task Definition:"
