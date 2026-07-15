@@ -105,7 +105,18 @@ jobs:
                     | .containerDefinitions[0].image = $IMAGE
                     ' \
                     current_task_definition.json > updated_task_definition.json
-            - name: Show Task Definition Before Update
+            - name: Register New Task Definition
+              id: register-task
               run: |
-                  echo "Current Task Definition:"
-                  cat updated_task_definition.json
+                TASK_DEFINITION_ARN=$(
+                  aws ecs register-task-definition \
+                    --cli-input-json file://new-task-definition.json \
+                    --query 'taskDefinition.taskDefinitionArn' \
+                    --output text
+                )
+            
+                echo "TASK_DEFINITION_ARN=$TASK_DEFINITION_ARN" >> "$GITHUB_ENV"
+                echo "task_definition_arn=$TASK_DEFINITION_ARN" >> "$GITHUB_OUTPUT"
+            - name: Show Registered Task Definition
+              run: |
+                echo "$TASK_DEFINITION_ARN"
