@@ -36,15 +36,33 @@ runs:
         - id: build
           shell: bash
           run: |
-              IMAGE_URI="${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image_tag }}"
+              REPOSITORY="${{ inputs.repository }}"
+              REGISTRY="${{ inputs.registry }}"
+              IMAGE_TAG="${{ inputs.image_tag }}"
+              FULL_IMAGE_URI="$REGISTRY/$REPOSITORY:$IMAGE_TAG"
 
-              docker build \
-                  --file "${{ inputs.dockerfile }}" \
-                  --build-arg "${{ inputs.build_args }}" \
-                  --tag "$IMAGE_URI" \
+              DOCKER_BUILD_FLAGS=()
+
+
+                if [ -n "${{ inputs.build_args }}" ]; then
+                  # Loop through each space-separated arg and append a separate '--build-arg' switch
+                  for arg in ${{ inputs.build_args }}; do
+                    DOCKER_BUILD_FLAGS+=(--build-arg "$arg")
+                  done
+                fi
+
+                echo "Compiling container layers for: $FULL_IMAGE_URI..."
+
+                #| 2. Execute the build expanding the flag array parameters dynamically
+                docker build \
+                  --file "${{ inputs.context }}/${{ inputs.dockerfile }}" \
+                  "${DOCKER_BUILD_FLAGS[@]}" \
+                  --tag "$FULL_IMAGE_URI" \
                   "${{ inputs.context }}"
 
-              docker push "$IMAGE_URI"
+                echo "Pushing image to Amazon ECR..."
+                docker push "$FULL_IMAGE_URI"
 
-              echo "image_uri=$IMAGE_URI" >> $GITHUB_OUTPUT
-              echo "image_tag=${{ inputs.image_tag }}" >> $GITHUB_OUTPUT
+                #| 3. Export data metrics safely out to parent pipeline environments
+                echo "image_uri=$FULL_IMAGE_URI" >> $GITHUB_OUTPUT
+                echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
