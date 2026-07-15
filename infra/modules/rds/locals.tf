@@ -8,11 +8,36 @@ locals {
   parameter_prefix = "/${var.project_name}/${var.environment}"
 
   ssm = {
-    db_username = "${local.parameter_prefix}/rds/db_username"
-    db_password = "${local.parameter_prefix}/rds/db_password"
-    db_host     = "${local.parameter_prefix}/rds/db_host"
-    db_port     = "${local.parameter_prefix}/rds/db_port"
-    db_name     = "${local.parameter_prefix}/rds/db_name"
+    db_username = {
+      name        = "${local.parameter_prefix}/rds/db_username"
+      value       = aws_db_instance.this.username
+      description = "The username for the RDS database."
+      type        = "String"
+    }
+    db_password = {
+      name        = "${local.parameter_prefix}/rds/db_password"
+      value       = aws_db_instance.this.password
+      description = "The password for the RDS database."
+      type        = "SecureString"
+    }
+    db_host = {
+      name        = "${local.parameter_prefix}/rds/db_host"
+      value       = aws_db_instance.this.endpoint
+      description = "The endpoint of the RDS database."
+      type        = "String"
+    }
+    db_port = {
+      name        = "${local.parameter_prefix}/rds/db_port"
+      value       = tostring(aws_db_instance.this.port)
+      description = "The port of the RDS database."
+      type        = "String"
+    }
+    db_name = {
+      name        = "${local.parameter_prefix}/rds/db_name"
+      value       = aws_db_instance.this.db_name
+      description = "The name of the RDS database."
+      type        = "String"
+    }
   }
 
   db_instance_identifier   = "${var.project_name}-${var.environment}-db"
