@@ -117,6 +117,14 @@ jobs:
             
                 echo "TASK_DEFINITION_ARN=$TASK_DEFINITION_ARN" >> "$GITHUB_ENV"
                 echo "task_definition_arn=$TASK_DEFINITION_ARN" >> "$GITHUB_OUTPUT"
-            - name: Show Registered Task Definition
+            - name: Show Registered Task Definition adn the updated_task_definition.json
               run: |
                 echo "$TASK_DEFINITION_ARN"
+                cat updated_task_definition.json
+            - name: Deploy to ECS
+              run: |
+                aws ecs update-service \
+                  --cluster "$ECS_CLUSTER_NAME" \
+                  --service "$ECS_SERVICE_NAME" \
+                  --task-definition "$TASK_DEFINITION_ARN"
+                  
