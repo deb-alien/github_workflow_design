@@ -56,12 +56,7 @@ jobs:
           name: terraform-production-output
           path: backend/output
           search_artifacts: true
-          
-      - name: verify artifact
-        run: |
-          ls -ll
-          ls -r ./output/output.json
-          
+                    
       - name: Read and Export Terraform Output Variables
         run: |
           JSON_PATH="./output/output.json"
