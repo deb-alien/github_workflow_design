@@ -74,7 +74,6 @@ jobs:
               run: |
                   docker build \
                     -t ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG \
-                    -t ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:latest \
                     --build-arg NODE_ENV=production \
                     .
 
