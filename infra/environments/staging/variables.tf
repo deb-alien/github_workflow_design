@@ -108,3 +108,9 @@ variable "elasticache_port" {
   type        = number
   default     = 6379
 }
+
+variable "rds_port" {
+  description = "The port on which the RDS instance is listening."
+  type        = number
+  default     = 5432
+}

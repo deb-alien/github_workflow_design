@@ -20,6 +20,7 @@ variable "vpc_cidr" {
     condition     = can(cidrhost(var.vpc_cidr, 0))
     error_message = "The VPC CIDR block is not valid."
   }
+  default = "10.0.0.0/16"
 }
 
 variable "availability_zone_count" {
@@ -44,11 +45,13 @@ variable "ssl_policy" {
 variable "root_domain_name" {
   description = "The root domain name for the ACM certificate."
   type        = string
+  default     = "deb-alien.com"
 }
 
 variable "sub_domain" {
   description = "The subdomain for the Route53 record."
   type        = string
+  default     = "api"
 }
 
 variable "image_tag" {
@@ -71,6 +74,7 @@ variable "memory" {
 variable "terraform_remote_state_bucket" {
   description = "The S3 bucket name for storing Terraform remote state."
   type        = string
+  default     = "production-api-tf-state"
 }
 
 variable "terraform_remote_state_key" {
@@ -107,4 +111,10 @@ variable "elasticache_port" {
   description = "The port on which the ElastiCache cluster is listening."
   type        = number
   default     = 6379
+}
+
+variable "rds_port" {
+  description = "The port on which the RDS instance is listening."
+  type        = number
+  default     = 5432
 }
