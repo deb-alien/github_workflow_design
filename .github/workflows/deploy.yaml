@@ -64,7 +64,6 @@ jobs:
                   
                   docker build \
                     -t "$IMAGE_URI_TAGGED" \
-                    -t "$IMAGE_URI_LATEST" \
                     -f Dockerfile \
                     --build-arg NODE_ENV=production \
                     .
