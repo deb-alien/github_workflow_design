@@ -54,7 +54,7 @@ jobs:
           branch: main
           workflow_conclusion: success
           name: terraform-production-output
-          path: ./output 
+          path: backend/output
           search_artifacts: true
           
       - name: verify artifact
