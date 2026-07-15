@@ -22,12 +22,12 @@ locals {
     }
     cloudfront_public_key_id = {
       name        = "${local.parameter_prefix}/cloudfront/public_key_id"
-      type        = "SecureString"
+      type        = "String"
       description = "The ID of the CloudFront public key"
       value       = aws_cloudfront_public_key.this.id
     }
-    cloudfront_public_key_value = {
-      name        = "${local.parameter_prefix}/cloudfront/public_key_value"
+    cloudfront_private_key = {
+      name        = "${local.parameter_prefix}/cloudfront/private_key"
       type        = "SecureString"
       description = "The RSA 2048 private key used to sign CloudFront URLs"
       value       = tls_private_key.this.private_key_pem
