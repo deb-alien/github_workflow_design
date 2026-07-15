@@ -268,13 +268,30 @@ module "elasticache" {
   project_name = var.project_name
   environment  = var.environment
 
+  #| Engine Configuration
+  engine_version = "8.0"
+  node_type      = "cache.t3g.micro"
+
   #| Network Configuration
-  vpc_id                         = module.vpc.vpc_id
   database_subnet_ids            = module.vpc.database_subnet_ids
   elasticache_security_group_ids = [module.security_group.elasticache_security_group_id]
   port                           = var.elasticache_port
-}
 
+  #| Topology
+  num_cache_clusters         = 1
+  automatic_failover_enabled = true
+  multi_az_enabled           = false # For learning purposes; set to true in production for HA
+
+  #| Security
+  at_rest_encryption_enabled = true
+  transit_encryption_enabled = true
+
+  #| Maintenance & Backup
+  apply_immediately        = true
+  maintenance_window       = "Sun:04:00-Sun:05:00"
+  snapshot_retention_limit = 7
+  snapshot_window          = "03:00-04:00"
+}
 
 ## ==============================================================================
 ## PHASE 5: COMPUTE TIERS & PUBLIC APP ENTRY POINTS

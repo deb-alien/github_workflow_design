@@ -151,6 +151,19 @@ output "rds_monitoring_role_arn" {
 }
 
 #-----------------------------------------------------------------------------
+#| ElastiCache Valkey Outputs
+#-----------------------------------------------------------------------------
+output "elasticache_valkey_endpoint" {
+  value       = module.elasticache_valkey.cache_endpoint
+  description = "The endpoint of the ElastiCache Valkey cluster"
+}
+
+output "elasticache_valkey_port" {
+  value       = module.elasticache_valkey.cache_port
+  description = "The port of the ElastiCache Valkey cluster"
+}
+
+#-----------------------------------------------------------------------------
 #| ECS Outputs
 #-----------------------------------------------------------------------------
 output "ecs_cluster_name" {
