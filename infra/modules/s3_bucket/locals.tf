@@ -8,7 +8,12 @@ locals {
   bucket_name      = var.bucket_name
   parameter_prefix = "/${var.project_name}/${var.environment}"
   ssm = {
-    bucket_name = "${local.parameter_prefix}/s3/bucket_name"
+    bucket_name = {
+      name        = "${local.parameter_prefix}/s3/bucket_name"
+      value       = aws_s3_bucket.this.bucket
+      description = "The name of the S3 bucket."
+      type        = "String"
+    }
   }
   ecs_object_actions = [
     "s3:GetObject",
