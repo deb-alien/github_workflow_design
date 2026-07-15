@@ -210,3 +210,8 @@ output "ecr_repository_uri" {
   value       = local.bootstrap_outputs["ecr_repository_url"]
   description = "The URI of the ECR repository"
 }
+
+output "container_name" {
+  value       = module.ecs_cluster.container_name
+  description = "The name of the container in the ECS task definition"
+}
