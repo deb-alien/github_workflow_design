@@ -8,6 +8,7 @@ on:
         paths:
             - 'infra/environments/production/**'
             - 'infra/modules/**'
+            - '.github/workflows/terraform-plan.yml'
     workflow_dispatch:
 
 permissions:
