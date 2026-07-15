@@ -261,7 +261,7 @@ module "rds" {
   ** It allows the application to store and retrieve data quickly, improving performance and scalability.
 */
 
-module "elasticache" {
+module "elasticache_valkey" {
   source = "../../modules/elasticache"
 
   #| Metadata
