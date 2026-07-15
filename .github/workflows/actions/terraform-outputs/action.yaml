@@ -46,7 +46,7 @@ runs:
         - name: Validate Output File
           shell: bash
           run: |
-              if [ ! -f "terraform-output/terraform-production-output/output.json" ]; then
+              if [ ! -f "terraform-output/output.json" ]; then
                   echo "Terraform output file not found at nested location!"
                   exit 1
               fi
@@ -55,7 +55,7 @@ runs:
           id: outputs
           shell: bash
           run: |
-              OUTPUT_FILE="terraform-output/terraform-production-output/output.json"
+              OUTPUT_FILE="terraform-output/output.json"
 
               ECR_REPOSITORY_NAME=$(jq -r '.ecr_repository_name.value' "$OUTPUT_FILE")
               ECS_CLUSTER_NAME=$(jq -r '.ecs_cluster_name.value' "$OUTPUT_FILE")
