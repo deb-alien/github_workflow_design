@@ -1,0 +1,76 @@
+name: 'Terraform Plan'
+run-name: 'Terraform Plan for ${{ github.ref_name }}'
+
+on:
+    pull_request:
+        branches:
+            - main
+        paths:
+            - 'infra/environments/production/**'
+            - 'infra/modules/**'
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    id-token: write
+    pull-requests: write
+
+concurrency:
+    group: 'terraform-plan-${{ github.ref_name }}'
+    cancel-in-progress: true
+
+jobs:
+    terraform-plan:
+        name: Validate, Lint, and Plan
+        runs-on: ubuntu-latest
+        environment: production
+
+        defaults:
+            run:
+                working-directory: infra/environments/production
+                shell: bash
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v7
+
+            - name: Setup AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                  role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+                  aws-region: us-east-1
+
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v4
+              with:
+                  terraform_version: '1.15.0'
+
+            - name: Setup TFLint
+              uses: terraform-linters/setup-tflint@v6
+              with:
+                  tflint_version: latest
+
+            - name: Terraform Format & Init Validate
+              run: |
+                  terraform fmt -check -recursive ../../
+                  terraform init -backend=false
+                  terraform validate
+
+            - name: Run TFLint
+              run: |
+                  tflint --init --chdir=../../
+                  tflint --recursive --chdir=../../
+
+            - name: Terraform Production Init
+              run: terraform init -input=false
+
+            - name: Terraform Production Plan
+              id: plan
+              run: terraform plan -input=false -out=tfplan -no-color
+
+            - name: Upload Terraform Plan Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: terraform-plan
+                  path: infra/environments/production/tfplan
+                  retention-days: 7
