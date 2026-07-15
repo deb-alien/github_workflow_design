@@ -278,8 +278,8 @@ module "elasticache_valkey" {
   port                           = var.elasticache_port
 
   #| Topology
-  num_cache_clusters         = 1
-  automatic_failover_enabled = true
+  num_cache_clusters         = 1     # must be 2 if automatic_failover_enabled is true
+  automatic_failover_enabled = false # For learning purposes; set to true in production for HA
   multi_az_enabled           = false # For learning purposes; set to true in production for HA
 
   #| Security
