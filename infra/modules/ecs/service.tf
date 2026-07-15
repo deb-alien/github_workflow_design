@@ -1,5 +1,5 @@
 resource "aws_ecs_service" "api" {
-  name            = "${local.cluster_name}-api"
+  name            = "${local.cluster_name}-service"
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.api.arn
 
@@ -38,7 +38,7 @@ resource "aws_ecs_service" "api" {
   }
 
   lifecycle {
-    ignore_changes = [desired_count]
+    ignore_changes = [desired_count, task_definition]
   }
 
   tags = merge(
