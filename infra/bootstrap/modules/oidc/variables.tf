@@ -17,3 +17,8 @@ variable "environment" {
   description = "The environment (e.g., dev, staging, prod)"
   type        = string
 }
+
+variable "ecr_repository_arn" {
+  description = "The ARN of the ECR repository used for storing Docker images"
+  type        = string
+}
