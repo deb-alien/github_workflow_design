@@ -1,5 +1,5 @@
 resource "aws_route53_record" "cdn" {
-  for_each = toset(var.cdn_aliases)
+  for_each = toset(local.cdn_record_names)
   zone_id  = data.aws_route53_zone.this.zone_id
 
   name = each.value
@@ -13,7 +13,7 @@ resource "aws_route53_record" "cdn" {
 }
 
 resource "aws_route53_record" "cdn_ipv6" {
-  for_each = toset(var.cdn_aliases)
+  for_each = toset(local.cdn_record_names)
 
   zone_id = data.aws_route53_zone.this.zone_id
   name    = each.value

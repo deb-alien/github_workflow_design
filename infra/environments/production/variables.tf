@@ -1,16 +1,19 @@
 variable "aws_region" {
   description = "The AWS region to deploy resources in"
   type        = string
+  default     = "us-east-1"
 }
 
 variable "project_name" {
   description = "The name of the project. This will be used as a prefix for all resources created by this module."
   type        = string
+  default     = "api"
 }
 
 variable "environment" {
   description = "The environment for which the resources are being created (e.g., dev, staging, production)."
   type        = string
+  default     = "production"
 }
 
 variable "vpc_cidr" {
@@ -20,6 +23,7 @@ variable "vpc_cidr" {
     condition     = can(cidrhost(var.vpc_cidr, 0))
     error_message = "The VPC CIDR block is not valid."
   }
+  default = "10.0.0.0/16"
 }
 
 variable "availability_zone_count" {
@@ -44,16 +48,19 @@ variable "ssl_policy" {
 variable "root_domain_name" {
   description = "The root domain name for the ACM certificate."
   type        = string
+  default     = "deb-alien.com"
 }
 
 variable "sub_domain" {
   description = "The subdomain for the Route53 record."
   type        = string
+  default     = "api"
 }
 
 variable "image_tag" {
   description = "The tag of the Docker image to use for the ECS service."
   type        = string
+  default     = "latest"
 }
 
 variable "cpu" {
@@ -71,6 +78,7 @@ variable "memory" {
 variable "terraform_remote_state_bucket" {
   description = "The S3 bucket name for storing Terraform remote state."
   type        = string
+  default     = "production-api-tf-state"
 }
 
 variable "terraform_remote_state_key" {
@@ -107,4 +115,10 @@ variable "elasticache_port" {
   description = "The port on which the ElastiCache cluster is listening."
   type        = number
   default     = 6379
+}
+
+variable "rds_port" {
+  description = "The port on which the RDS instance is listening."
+  type        = number
+  default     = 5432
 }

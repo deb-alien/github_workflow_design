@@ -28,7 +28,7 @@ variable "alb_zone_id" {
   type        = string
 }
 
-variable "cdn_aliases" {
+variable "cdn_domain_aliases" {
   description = "The aliases for the CloudFront distribution"
   type        = list(string)
 }

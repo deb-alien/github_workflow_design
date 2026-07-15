@@ -1,16 +1,19 @@
 variable "aws_region" {
   description = "The AWS region to deploy resources in"
   type        = string
+  default     = "us-east-1"
 }
 
 variable "project_name" {
   description = "The name of the project. This will be used as a prefix for all resources created by this module."
   type        = string
+  default     = "api"
 }
 
 variable "environment" {
   description = "The environment for which the resources are being created (e.g., dev, staging, production)."
   type        = string
+  default     = "staging"
 }
 
 variable "vpc_cidr" {
@@ -26,7 +29,6 @@ variable "availability_zone_count" {
   description = "Number of Availability Zones to use"
   type        = number
   default     = 3
-
 
   validation {
     condition     = var.availability_zone_count >= 2 && var.availability_zone_count <= 6
@@ -44,16 +46,19 @@ variable "ssl_policy" {
 variable "root_domain_name" {
   description = "The root domain name for the ACM certificate."
   type        = string
+  default     = "deb-alien.com"
 }
 
 variable "sub_domain" {
   description = "The subdomain for the Route53 record."
   type        = string
+  default     = "api"
 }
 
 variable "image_tag" {
   description = "The tag of the Docker image to use for the ECS service."
   type        = string
+  default     = "latest"
 }
 
 variable "cpu" {
@@ -107,4 +112,10 @@ variable "elasticache_port" {
   description = "The port on which the ElastiCache cluster is listening."
   type        = number
   default     = 6379
+}
+
+variable "rds_port" {
+  description = "The port on which the RDS instance is listening."
+  type        = number
+  default     = 5432
 }
