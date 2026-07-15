@@ -1,0 +1,67 @@
+# name: 'Terraform Plan'
+# run-name: 'Terraform Plan'
+
+# on:
+#     pull_request:
+#         branches:
+#             - main
+#     workflow_dispatch:
+
+# permissions:
+#     contents: read
+#     id-token: write
+
+# jobs:
+#     terraform:
+#         name: Terraform Plan
+#         runs-on: ubuntu-latest
+#         strategy:
+#             matrix:
+#                 environment:
+#                     - production
+#                     - staging
+#         environment: ${{ matrix.environment }}
+#         defaults:
+#             run:
+#                 working-directory: infra/environments/${{ matrix.environment }}
+#                 shell: bash
+
+#         steps:
+#             - name: Checkout code
+#               uses: actions/checkout@v7
+
+#             - name: Setup AWS Credentials
+#               uses: aws-actions/configure-aws-credentials@v6.1.3
+#               with:
+#                   role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+#                   aws-region: ${{ vars.AWS_REGION }}
+
+#             - name: Setup Terraform
+#               uses: hashicorp/setup-terraform@v4
+#               with:
+#                   terraform_version: 1.15.0
+
+#             - name: Setup TFLint
+#               uses: terraform-linters/setup-tflint@v6
+#               with:
+#                   tflint_version: latest
+#             - name: Terraform Lint and Format Check
+#               run: |
+#                   terraform fmt -check -recursive
+#                   tflint --init
+#                   tflint --recursive -f compact
+#             - name: Validate Terraform configuration
+#               run: |
+#                   terraform init -backend=false
+#                   terraform validate
+#             - name: Terraform Plan
+#               run: |
+#                   terraform init
+#                   terraform plan \
+#                   -out=${{ matrix.environment }}.tfplan \
+#                   -var="environment=${{ matrix.environment }}" \
+#                   -var="aws_region=${{ vars.AWS_REGION }}" \
+#                   -var="project_name=${{ vars.PROJECT_NAME }}" \
+#                   -var="root_domain_name=${{ vars.ROOT_DOMAIN }}" \
+#                   -var="sub_domain=${{ vars.SUB_DOMAIN }}" \
+#                   -var="image_tag=${{ github.sha }}" \

@@ -1,0 +1,41 @@
+# name: 'Deploy to Staging Environment'
+# run-name: 'Deploy to Staging Environment'
+
+# on:
+#     workflow_dispatch:
+#     push:
+#         branches:
+#             - main
+
+# permissions:
+#     contents: read
+#     id-token: write
+
+# jobs:
+#     deploy:
+#         name: Deploy to Staging Environment
+#         runs-on: ubuntu-latest
+#         environment: staging
+#         defaults:
+#             run:
+#                 working-directory: infra/environments/staging
+#                 shell: bash
+
+#         steps:
+#             - name: Checkout code
+#               uses: actions/checkout@v7
+
+#             - name: Setup AWS Credentials
+#               uses: aws-actions/configure-aws-credentials@v6.1.3
+#               with:
+#                   role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+#                   aws-region: ${{ vars.AWS_REGION }}
+
+#             - name: Setup Terraform
+#               uses: hashicorp/setup-terraform@v4
+#               with:
+#                   terraform_version: 1.15.0
+
+#             - name: Terraform Apply
+#               run: |
+#                   aws sts get-caller-identity
