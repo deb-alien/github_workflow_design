@@ -23,13 +23,11 @@ jobs:
     terraform-plan:
         name: Validate, Lint, and Plan
         runs-on: ubuntu-latest
-        environment: production
-
         defaults:
             run:
                 working-directory: infra/environments/production
                 shell: bash
-
+        environment: production
         steps:
             - name: Checkout Code
               uses: actions/checkout@v7
