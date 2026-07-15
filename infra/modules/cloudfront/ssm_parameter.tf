@@ -1,5 +1,5 @@
 resource "aws_ssm_parameter" "cloudfront_private_key_value" {
-  name        = local.ssm.cloudfront_private_key_value
+  name        = local.ssm.cloudfront_public_key_value
   description = "The RSA 2048 private key used to sign CloudFront URLs"
   type        = "SecureString"
   value       = tls_private_key.this.private_key_pem
@@ -29,7 +29,7 @@ resource "aws_ssm_parameter" "cloudfront_alias" {
   name        = local.ssm.cloudfront_alias
   description = "The alias of the CloudFront distribution"
   type        = "SecureString"
-  value       = values(var.aliases)[0]
+  value       = var.aliases[0]
 
   tags = merge(local.common_tags, { Name = "CloudFront Alias" })
 }
