@@ -103,7 +103,7 @@ module "route53" {
   alb_zone_id               = module.alb.load_balancer_zone_id
   cloudfront_domain_name    = module.cloudfront.cloudfront_distribution_domain_name
   cloudfront_hosted_zone_id = module.cloudfront.cloudfront_distribution_hosted_zone_id
-  cdn_aliases               = local.cdn_aliases
+  cdn_domain_aliases        = local.cdn_domain_aliases
 }
 
 /**
@@ -188,7 +188,7 @@ module "cloudfront" {
 
   #| Content Delivery Configuration
   bucket_regional_domain_name = module.s3_bucket.bucket_regional_domain_name
-  aliases                     = local.cdn_aliases
+  aliases                     = module.route53.cdn_record_names
   pricing_class               = "PriceClass_100" # Lowest cost option; optimizes edge locations to US, Canada, and Europe only
 
   #| Ingress Security & TLS

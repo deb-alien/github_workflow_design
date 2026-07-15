@@ -58,6 +58,11 @@ output "s3_bucket_arn" {
   description = "The ARN of the S3 bucket"
 }
 
+output "s3_bucket_regional_domain_name" {
+  value       = module.s3_bucket.bucket_regional_domain_name
+  description = "The regional domain name of the S3 bucket"
+}
+
 #-----------------------------------------------------------------------------
 #| Route53 Outputs
 #-----------------------------------------------------------------------------
@@ -66,9 +71,19 @@ output "api_domain_name" {
   description = "The fully qualified domain name of the Route53 record"
 }
 
+output "api_record_name" {
+  value       = module.route53.api_record_name
+  description = "The name of the Route53 record"
+}
+
 output "cdn_domain_names" {
   value       = module.route53.cdn_record_fqdns
   description = "The fully qualified domain names of the Route53 CDN records"
+}
+
+output "cdn_record_names" {
+  value       = module.route53.cdn_record_names
+  description = "The names of the Route53 CDN records"
 }
 
 #-----------------------------------------------------------------------------
@@ -125,8 +140,8 @@ output "cloudfront_distribution_hosted_zone_id" {
 output "cloudfront_distribution_aliases" {
   value       = module.cloudfront.cloudfront_distribution_aliases
   description = "The aliases of the CloudFront distribution"
-
 }
+
 #-----------------------------------------------------------------------------
 #| RDS Outputs
 #-----------------------------------------------------------------------------
@@ -172,11 +187,21 @@ output "elasticache_valkey_reader_endpoint" {
 #| ECS Outputs
 #-----------------------------------------------------------------------------
 output "ecs_cluster_name" {
-  value       = module.ecs_cluster.cluster_name
+  value       = module.ecs_cluster.ecs_cluster_name
   description = "The name of the ECS cluster"
 }
 
 output "ecs_service_name" {
-  value       = module.ecs_cluster.service_name
+  value       = module.ecs_cluster.ecs_service_name
   description = "The name of the ECS service"
+}
+
+output "ecs_task_definition_family" {
+  value       = module.ecs_cluster.ecs_task_definition_family
+  description = "The family of the ECS task definition"
+}
+
+output "ecr_repository_name" {
+  value       = local.bootstrap_outputs["ecr_repository_name"]
+  description = "The name of the ECR repository"
 }

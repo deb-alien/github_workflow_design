@@ -1,16 +1,19 @@
 variable "aws_region" {
   description = "The AWS region to deploy resources in"
   type        = string
+  default     = "us-east-1"
 }
 
 variable "project_name" {
   description = "The name of the project. This will be used as a prefix for all resources created by this module."
   type        = string
+  default     = "api"
 }
 
 variable "environment" {
   description = "The environment for which the resources are being created (e.g., dev, staging, production)."
   type        = string
+  default     = "production"
 }
 
 variable "vpc_cidr" {
@@ -57,6 +60,7 @@ variable "sub_domain" {
 variable "image_tag" {
   description = "The tag of the Docker image to use for the ECS service."
   type        = string
+  default     = "latest"
 }
 
 variable "cpu" {
