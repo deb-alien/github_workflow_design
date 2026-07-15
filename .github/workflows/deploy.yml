@@ -2,83 +2,95 @@ name: 'Deploy Backend Application'
 run-name: 'Deploy Backend Application - ${{ github.ref_name }}'
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'backend/**'
-      - '.github/workflows/deploy.yaml'
-  workflow_dispatch:
+    push:
+        branches:
+            - main
+        paths:
+            - 'backend/**'
+            - '.github/workflows/deploy.yaml'
+    workflow_dispatch:
 
 permissions:
-  contents: read
-  id-token: write
+    contents: read
+    id-token: write
 
 concurrency:
-  group: deploy-production
-  cancel-in-progress: true
+    group: deploy-production
+    cancel-in-progress: true
 
 jobs:
-  build-and-push:
-    name: Build and Push Docker Image
-    runs-on: ubuntu-latest
-    environment: production
+    build-and-push:
+        name: Build and Push Docker Image
+        runs-on: ubuntu-latest
+        environment: production
 
-    defaults:
-      run:
-        working-directory: backend
-        shell: bash
+        defaults:
+            run:
+                working-directory: backend
+                shell: bash
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
 
-      - name: Setup AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
-          aws-region: ${{ vars.AWS_REGION }}
+            - name: Setup AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+                  aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        id: ecr-login
-        uses: aws-actions/amazon-ecr-login@v2
+            - name: Login to Amazon ECR
+              id: ecr-login
+              uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
+            - name: Setup Docker Buildx
+              uses: docker/setup-buildx-action@v3
 
-      - name: Download Artifacts from Terraform Apply Workflow
-        uses: dawidd6/action-download-artifact@v21
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: .github/workflows/terraform-apply.yml
-          branch: main
-          workflow_conclusion: success
-          name: terraform-production-output
-          path: backend/output
-          search_artifacts: true
-                    
-      - name: Read and Export Terraform Output Variables
-        run: |
-          JSON_PATH="./output/output.json"
-          echo "ECR_REPOSITORY_NAME=$(jq -r '.ecr_repository_name.value' $JSON_PATH)" >> $GITHUB_ENV
-          echo "ECS_CLUSTER_NAME=$(jq -r '.ecs_cluster_name.value' $JSON_PATH)" >> $GITHUB_ENV
-          echo "ECS_SERVICE_NAME=$(jq -r '.ecs_service_name.value' $JSON_PATH)" >> $GITHUB_ENV
-          echo "ECS_TASK_DEFINITION_FAMILY=$(jq -r '.ecs_task_definition_family.value' $JSON_PATH)" >> $GITHUB_ENV
+            - name: Download Artifacts from Terraform Apply Workflow
+              uses: dawidd6/action-download-artifact@v21
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  workflow: .github/workflows/terraform-apply.yml
+                  branch: main
+                  workflow_conclusion: success
+                  name: terraform-production-output
+                  path: backend/output
+                  search_artifacts: true
 
-      - name: Generate Short Image Tag
-        run: |
-          IMAGE_TAG=${GITHUB_SHA::7}
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+            - name: Read and Export Terraform Output Variables
+              run: |
+                  JSON_PATH="./output/output.json"
+                  echo "ECR_REPOSITORY_NAME=$(jq -r '.ecr_repository_name.value' $JSON_PATH)" >> $GITHUB_ENV
+                  echo "ECS_CLUSTER_NAME=$(jq -r '.ecs_cluster_name.value' $JSON_PATH)" >> $GITHUB_ENV
+                  echo "ECS_SERVICE_NAME=$(jq -r '.ecs_service_name.value' $JSON_PATH)" >> $GITHUB_ENV
+                  echo "ECS_TASK_DEFINITION_FAMILY=$(jq -r '.ecs_task_definition_family.value' $JSON_PATH)" >> $GITHUB_ENV
 
-      - name: Build Docker Image
-        run: |
-          docker build \
-            -t ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG \
-            -t ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:latest \
-            --build-arg NODE_ENV=production \
-            .
+            - name: Generate Short Image Tag
+              run: |
+                  IMAGE_TAG=${GITHUB_SHA::7}
+                  echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
-      - name: Push Docker Image to ECR
-        run: |
-          docker push ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG
-          docker push ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:latest
+            - name: Build Docker Image
+              run: |
+                  docker build \
+                    -t ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG \
+                    -t ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:latest \
+                    --build-arg NODE_ENV=production \
+                    .
+
+            - name: Push Docker Image to ECR
+              run: |
+                  docker push ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG
+                  docker push ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:latest
+
+            - name: Download Current Task Definition
+              run: |
+                  aws ecs describe-task-definition \
+                    --task-definition $ECS_TASK_DEFINITION_FAMILY \
+                    --query 'taskDefinition' \
+                    --output json > current_task_definition.json
+
+            - name: Show Task Definition Before Update
+              run: |
+                  echo "Current Task Definition:"
+                  cat current_task_definition.json
