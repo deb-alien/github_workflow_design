@@ -5,11 +5,9 @@ inputs:
     github_token:
         description: 'GitHub token to access the workflow artifacts'
         required: true
-
     workflow:
         description: 'The workflow file name to download the artifacts from'
         required: true
-
     branch:
         description: 'The branch to download the artifacts from'
         required: true
@@ -35,7 +33,7 @@ runs:
     using: composite
     steps:
         - name: Download Artifacts from Terraform Apply Workflow
-          uses: dawidd6/action-download-artifact@v21
+          uses: dawidd6/action-download-artifact@v21 # Enforce stable major production footprint tracking
           with:
               github_token: ${{ inputs.github_token }}
               workflow: ${{ inputs.workflow }}
@@ -44,11 +42,12 @@ runs:
               name: terraform-production-output
               path: terraform-output
               search_artifacts: true
+
         - name: Validate Output File
           shell: bash
           run: |
-              if [ ! -f terraform-output/output.json ]; then
-                  echo "Terraform output file not found!"
+              if [ ! -f "terraform-output/terraform-production-output/output.json" ]; then
+                  echo "Terraform output file not found at nested location!"
                   exit 1
               fi
 
@@ -56,11 +55,7 @@ runs:
           id: outputs
           shell: bash
           run: |
-              OUTPUT_FILE="terraform-output/output.json"
-              if [ ! -f "$OUTPUT_FILE" ]; then
-                  echo "Terraform output file not found!"
-                  exit 1
-              fi
+              OUTPUT_FILE="terraform-output/terraform-production-output/output.json"
 
               ECR_REPOSITORY_NAME=$(jq -r '.ecr_repository_name.value' "$OUTPUT_FILE")
               ECS_CLUSTER_NAME=$(jq -r '.ecs_cluster_name.value' "$OUTPUT_FILE")
