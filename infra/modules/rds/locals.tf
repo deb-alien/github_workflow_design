@@ -10,31 +10,31 @@ locals {
   ssm = {
     db_username = {
       name        = "${local.parameter_prefix}/rds/db_username"
-      value       = aws_db_instance.this.username
+      value       = aws_db_instance.default.username
       description = "The username for the RDS database."
       type        = "String"
     }
     db_password = {
       name        = "${local.parameter_prefix}/rds/db_password"
-      value       = aws_db_instance.this.password
+      value       = random_password.password.result
       description = "The password for the RDS database."
       type        = "SecureString"
     }
     db_host = {
       name        = "${local.parameter_prefix}/rds/db_host"
-      value       = aws_db_instance.this.endpoint
+      value       = aws_db_instance.default.endpoint
       description = "The endpoint of the RDS database."
       type        = "String"
     }
     db_port = {
       name        = "${local.parameter_prefix}/rds/db_port"
-      value       = tostring(aws_db_instance.this.port)
+      value       = tostring(aws_db_instance.default.port)
       description = "The port of the RDS database."
       type        = "String"
     }
     db_name = {
       name        = "${local.parameter_prefix}/rds/db_name"
-      value       = aws_db_instance.this.db_name
+      value       = aws_db_instance.default.db_name
       description = "The name of the RDS database."
       type        = "String"
     }
