@@ -1,0 +1,76 @@
+name: ECS Deploy
+
+description: Deploy a new Docker image to an ECS Service
+
+inputs:
+    cluster:
+        required: true
+
+    service:
+        required: true
+
+    task-definition-family:
+        required: true
+
+    image-uri:
+        required: true
+
+    container-name:
+        required: true
+
+    rollback-on-failure:
+        required: false
+        default: 'true'
+
+outputs:
+    task-definition-arn:
+        value: ${{ steps.deploy.outputs.task-definition-arn }}
+
+runs:
+    using: composite
+
+    steps:
+        - shell: bash
+          run: chmod +x ${{ github.action_path }}/scripts/*.sh
+
+        - id: current
+          shell: bash
+          run: |
+              CURRENT=$(
+                ${{ github.action_path }}/scripts/describe-service.sh \
+                "${{ inputs.cluster }}" \
+                "${{ inputs.service }}"
+              )
+
+              echo "current=$CURRENT" >> "$GITHUB_OUTPUT"
+
+        - shell: bash
+          run: |
+              ${{ github.action_path }}/scripts/download-task-definition.sh \
+                "${{ inputs.task-definition-family }}" \
+                > task-definition.json
+
+        - shell: bash
+          run: |
+              cat task-definition.json |
+              ${{ github.action_path }}/scripts/render-task-definition.sh \
+                "${{ inputs.image-uri }}" \
+                "${{ inputs.container-name }}" \
+                > new-task-definition.json
+
+        - id: register
+          shell: bash
+          run: |
+              TASK=$(
+                ${{ github.action_path }}/scripts/register-task-definition.sh \
+                  new-task-definition.json
+              )
+
+              echo "task=$TASK" >> "$GITHUB_OUTPUT"
+
+        - shell: bash
+          run: |
+              ${{ github.action_path }}/scripts/deploy.sh \
+                "${{ inputs.cluster }}" \
+                "${{ inputs.service }}" \
+                "${{ steps.register.outputs.task }}"
