@@ -1,0 +1,73 @@
+name: 'Deploy Backend Application'
+run-name: 'Deploy Backend Application - ${{ github.ref_name }}'
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - 'backend/**'
+            - '.github/workflows/deploy.yaml'
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    id-token: write
+
+concurrency:
+    group: deploy-production
+    cancel-in-progress: true
+
+jobs:
+    build-and-push:
+        name: Build and Push Docker Image
+        runs-on: ubuntu-latest
+        environment: production
+
+        defaults:
+            run:
+                working-directory: backend
+                shell: bash
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v7
+
+            - name: Setup AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                  role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+                  aws-region: ${{ vars.AWS_REGION }}
+
+            - name: Login to Amazon ECR
+              id: ecr-login
+              uses: aws-actions/amazon-ecr-login@v2
+
+            - name: Setup Docker Buildx
+              uses: docker/setup-buildx-action@v4
+
+            - name: Read Terraform Outputs
+              id: terraform
+              uses: ./.github/workflows/actions/terraform-outputs
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  workflow: terraform-apply.yaml
+                  branch: main
+
+            - name: Build and Push Docker Image to ECR
+              id: docker
+              uses: ./.github/workflows/actions/docker-build
+              with:
+                  registry: ${{ steps.ecr-login.outputs.registry }}
+                  repository: ${{ steps.terraform.outputs.ecr_repository_name }}
+                  image_tag: ${{ github.sha }}
+                  context: backend
+
+            - name: Deploy to Amazon ECS
+              uses: ./.github/workflows/actions/ecs-deploy
+              with:
+                  cluster: ${{ steps.terraform.outputs.ecs_cluster_name }}
+                  service: ${{ steps.terraform.outputs.ecs_service_name }}
+                  task-definition-family: ${{ steps.terraform.outputs.ecs_task_definition_family }}
+                  image-uri: ${{ steps.docker.outputs.image_uri }}
+                  container-name: ${{ steps.terraform.outputs.container_name }}

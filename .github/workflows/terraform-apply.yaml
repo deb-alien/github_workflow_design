@@ -7,7 +7,7 @@ on:
         paths:
             - 'infra/environments/production/**'
             - 'infra/modules/**'
-            - '.github/workflows/terraform-apply.yml'
+            - '.github/workflows/terraform-apply.yaml'
     workflow_dispatch:
 
 permissions:
