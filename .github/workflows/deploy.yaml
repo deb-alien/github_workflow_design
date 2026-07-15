@@ -51,7 +51,7 @@ jobs:
               uses: ./.github/workflows/actions/terraform-outputs
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
-                  workflow: ./github/workflows/terraform-apply.yaml
+                  workflow: ./.github/workflows/terraform-apply.yaml
                   branch: main
 
             - name: Build and Push Docker Image to ECR
