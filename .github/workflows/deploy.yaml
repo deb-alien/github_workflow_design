@@ -1,14 +1,17 @@
-name: 'Deploy'
+name: 'Deploy Backend Application'
+run-name: 'Deploy Backend Application - ${{ github.ref_name }}'
 
 on:
     push:
         branches:
             - main
+        paths:
+            - 'backend/**'
     workflow_dispatch:
 
 permissions:
     contents: read
-    id-token: write
+    id-token: write # Required for secure AWS OIDC token handshakes
 
 concurrency:
     group: deploy-production
@@ -19,12 +22,18 @@ jobs:
         name: Build and Push Docker Image
         runs-on: ubuntu-latest
         environment: production
+
+        defaults:
+            run:
+                working-directory: backend
+                shell: bash
+
         steps:
-            - name: Checkout code
-              uses: actions/checkout@v7
+            - name: Checkout Code
+              uses: actions/checkout@v4
 
             - name: Setup AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v6
+              uses: aws-actions/configure-aws-credentials@v4
               with:
                   role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
                   aws-region: ${{ vars.AWS_REGION }}
@@ -36,17 +45,39 @@ jobs:
             - name: Setup Docker Buildx
               uses: docker/setup-buildx-action@v3
 
-            - name: Build and Push Docker Image
-              uses: docker/build-push-action@v7
-
+            - name: Download Artifacts from Terraform Apply Workflow
+              uses: dawidd6/action-download-artifact@v9
               with:
-                  context: ./backend
-                  file: ./backend/Dockerfile
-                  push: true
-                  build-args: |
-                      NODE_ENV=production
-                  tags: |
-                      ${{ steps.ecr-login.outputs.registry }}/${{ vars.ECR_REPOSITORY_NAME }}:latest
-                      ${{ steps.ecr-login.outputs.registry }}/${{ vars.ECR_REPOSITORY_NAME }}:${{ github.sha }}
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  workflow: terraform-apply.yml
+                  branch: main
+                  workflow_conclusion: success
+                  name: terraform-production-output
+                  path: ./output
+                  search_artifacts: true
+
+            - name: Read and Export Terraform Output Variables
+              run: |
+                  echo "Reading Terraform output from downloaded artifacts..."
+                  echo "ECR_REPOSITORY_NAME=$(jq -r '.ecr_repository_name.value' ./output/output.json)" >> $GITHUB_ENV
+                  echo "ECS_CLUSTER_NAME=$(jq -r '.ecs_cluster_name.value' ./output/output.json)" >> $GITHUB_ENV
+                  echo "ECS_SERVICE_NAME=$(jq -r '.ecs_service_name.value' ./output/output.json)" >> $GITHUB_ENV
+                  echo "ECS_TASK_DEFINITION_FAMILY=$(jq -r '.ecs_task_definition_family.value' ./output/output.json)" >> $GITHUB_ENV
+
+            - name: Generate Short Image Tag
+              run: |
+                  IMAGE_TAG=${GITHUB_SHA::7}
+                  echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
+            - name: Build Docker Image
+              run: |
+                  docker build \
+                    -t ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG \
+                    -t ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:latest \
+                    --build-arg NODE_ENV=production \
+                    .
+
+            - name: Push Docker Image to ECR
+              run: |
+                  docker push ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG
+                  docker push ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:latest

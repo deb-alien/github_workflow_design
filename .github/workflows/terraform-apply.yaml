@@ -41,7 +41,28 @@ jobs:
               with:
                   terraform_version: '1.15.0'
 
-            - name: Terraform Apply
+            - name: Terraform Init
               run: |
                   terraform init -input=false
-                  terraform apply -input=false -auto-approve
+
+            - name: Terraform Plan
+              run: |
+                  terraform plan -input=false -out=tfplan
+                  terraform show -no-color tfplan > plan.txt
+
+            - name: Terraform Apply
+              run: |
+                  terraform apply -input=false tfplan
+
+            - name: Save Terraform Output
+              run: |
+                  terraform output -json > output.json
+
+            - name: Upload Terraform Output
+              uses: actions/upload-artifact@v7
+              with:
+                  name: terraform-production-output
+                  path: |
+                      infra/environments/production/output.json
+                      infra/environments/production/plan.txt
+                  retention-days: 7

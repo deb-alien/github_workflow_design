@@ -108,7 +108,7 @@ variable "health_check_path" {
 variable "database_username" {
   description = "The username for the database."
   type        = string
-  default     = "admin-api-user"
+  default     = "admin_api_user"
 }
 
 variable "elasticache_port" {
