@@ -87,11 +87,12 @@ jobs:
                     --task-definition $ECS_TASK_DEFINITION_FAMILY \
                     --query 'taskDefinition' \
                     --output json > current_task_definition.json
+                    
             - name: Update Task Definition
               run: |
                   run: |
+                    IMAGE="${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG"
                     jq \
-                      --arg IMAGE "${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY_NAME:$IMAGE_TAG" \
                       '
                       del(
                         .taskDefinitionArn,
@@ -104,7 +105,7 @@ jobs:
                       )
                       | .containerDefinitions[0].image = $IMAGE
                       ' \
-                      task-definition.json > new-task-definition.json
+                      task-definition.json > current_task_definition.json
 
             - name: Show Task Definition Before Update
               run: |
