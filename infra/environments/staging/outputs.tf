@@ -205,3 +205,8 @@ output "ecr_repository_name" {
   value       = local.bootstrap_outputs["ecr_repository_name"]
   description = "The name of the ECR repository"
 }
+
+output "ecr_repository_uri" {
+  value       = local.bootstrap_outputs["ecr_repository_url"]
+  description = "The URI of the ECR repository"
+}
