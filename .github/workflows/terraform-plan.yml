@@ -23,13 +23,11 @@ jobs:
     terraform-plan:
         name: Validate, Lint, and Plan
         runs-on: ubuntu-latest
-        environment: production
-
         defaults:
             run:
                 working-directory: infra/environments/production
                 shell: bash
-
+        environment: production
         steps:
             - name: Checkout Code
               uses: actions/checkout@v7
@@ -38,7 +36,7 @@ jobs:
               uses: aws-actions/configure-aws-credentials@v6
               with:
                   role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
-                  aws-region: us-east-1
+                  aws-region: ${{ vars.AWS_REGION }}
 
             - name: Setup Terraform
               uses: hashicorp/setup-terraform@v4
@@ -70,12 +68,11 @@ jobs:
                   terraform plan \
                    -input=false \
                    -out=tfplan \
-                   -no-color \
                    -detailed-exitcode
                   terraform show -no-color tfplan > plan.txt
 
             - name: Upload Terraform Plan Artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                   name: terraform-plan-production
                   path: |
