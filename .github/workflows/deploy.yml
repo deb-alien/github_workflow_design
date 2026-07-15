@@ -7,7 +7,7 @@ on:
             - main
         paths:
             - 'backend/**'
-            - '.github/workflows/deploy.yaml'
+            - '.github/workflows/deploy.yml'
     workflow_dispatch:
 
 permissions:
@@ -87,7 +87,7 @@ jobs:
                     --task-definition $ECS_TASK_DEFINITION_FAMILY \
                     --query 'taskDefinition' \
                     --output json > current_task_definition.json
-                    
+
             - name: Update Task Definition
               run: |
                   run: |
