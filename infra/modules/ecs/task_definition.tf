@@ -1,5 +1,5 @@
 resource "aws_ecs_task_definition" "api" {
-  family                   = "${local.cluster_name}-api"
+  family                   = local.task_family
   cpu                      = var.cpu
   memory                   = var.memory
   network_mode             = "awsvpc"
@@ -13,19 +13,7 @@ resource "aws_ecs_task_definition" "api" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${local.cluster_name}-task-definition"
-    }
-  )
-}
-
-resource "aws_cloudwatch_log_group" "ecs" {
-  name              = "/ecs/${local.cluster_name}"
-  retention_in_days = 30
-
-  tags = merge(
-    local.common_tags,
-    {
-      Name = "${local.cluster_name}-log-group"
+      Name = local.task_family
     }
   )
 }

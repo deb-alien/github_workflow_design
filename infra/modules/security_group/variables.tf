@@ -18,3 +18,9 @@ variable "ecs_container_port" {
   type        = number
   default     = 3000
 }
+
+variable "elasticache_port" {
+  description = "The port on which the ElastiCache cluster is listening."
+  type        = number
+  default     = 6379
+}

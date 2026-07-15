@@ -103,8 +103,8 @@ variable "database_username" {
   default     = "admin-api-user"
 }
 
-variable "database_password" {
-  description = "The password for the database user."
-  type        = string
-  sensitive   = true
+variable "elasticache_port" {
+  description = "The port on which the ElastiCache cluster is listening."
+  type        = number
+  default     = 6379
 }

@@ -8,19 +8,14 @@ variable "environment" {
   type        = string
 }
 
-variable "vpc_id" {
-  description = "VPC ID"
-  type        = string
-}
-
-variable "private_subnet_ids" {
+variable "database_subnet_ids" {
   description = "Private subnet IDs"
   type        = list(string)
 }
 
-variable "ecs_security_group_id" {
-  description = "Security group of ECS tasks"
-  type        = string
+variable "elasticache_security_group_ids" {
+  description = "Security group IDs of ElastiCache"
+  type        = list(string)
 }
 
 variable "engine_version" {
@@ -88,11 +83,4 @@ variable "num_cache_clusters" {
 variable "apply_immediately" {
   type    = bool
   default = false
-}
-
-variable "auth_token" {
-  description = "Redis AUTH token"
-  type        = string
-  sensitive   = true
-  default     = null
 }

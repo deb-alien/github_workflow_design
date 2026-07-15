@@ -2,8 +2,6 @@
 ## PHASE 1: CORE NETWORKING & SECURITY FOUNDATION
 ## ==============================================================================
 /**
-  ## 1. Base VPC network topology (Subnets, Route Tables, Internet Gateways)
-
   ** Base VPC network topology (Subnets, Route Tables, Internet Gateways)
   ** This module provisions a VPC with public and private subnets, route tables, and an internet gateway.
   ** It allows the application to have a secure and isolated network environment in AWS.
@@ -26,8 +24,6 @@ module "vpc" {
 }
 
 /**
-  ## 2. Firewalls / Traffic rules protecting ALB, ECS Containers, and RDS Database
-
   ** Firewalls / Traffic rules protecting ALB, ECS Containers, and RDS Database
   ** This module provisions security groups for the Application Load Balancer (ALB), ECS tasks, and RDS database.
   ** It allows secure communication between the components of the application while restricting unauthorized access.
@@ -42,11 +38,10 @@ module "security_group" {
   #| Network Configuration
   vpc_id             = module.vpc.vpc_id
   ecs_container_port = var.container_port
+  elasticache_port   = var.elasticache_port
 }
 
 /**
-  ## 3. IAM Policies and Roles providing AWS execution and task privileges (S3, ECR, CloudWatch)
-
   ** IAM Policies and Roles providing AWS execution and task privileges (S3, ECR, CloudWatch)
   ** This module provisions IAM roles and policies for ECS tasks to access AWS services like S3, ECR, and CloudWatch.
   ** It allows secure access to necessary resources for the application to function properly.
@@ -63,8 +58,6 @@ module "iam" {
 }
 
 /**
-  ## 4. Interface and Gateway VPC Endpoints for secure, private AWS service integrations within the VPC
-
   ** Interface and Gateway VPC Endpoints for secure, private AWS service integrations within the VPC
   ** This module provisions VPC endpoints for services like S3 and DynamoDB, allowing private access without traversing the public internet.
   ** It allows secure and efficient communication with AWS services from within the VPC.
@@ -90,8 +83,6 @@ module "vpc_endpoints" {
 ## ==============================================================================
 
 /**
-  ## 5. Route 53 DNS Zone creation for apex and subdomain structures
-
   ** Route 53 DNS Zone creation for apex and subdomain structures
   ** This module provisions a public hosted zone in Route 53 for the domain and subdomain.
   ** It allows the application to be accessible via a custom domain name.
@@ -116,8 +107,6 @@ module "route53" {
 }
 
 /**
-  ## 6. Public SSL/TLS validation via AWS Certificate Manager (ACM)
-
   ** Public SSL/TLS validation via AWS Certificate Manager (ACM)
   ** This module provisions an ACM certificate for the domain and subdomain, enabling secure HTTPS connections.
 */
@@ -139,8 +128,6 @@ module "acm" {
 ## ==============================================================================
 
 /**
-  ## 7. S3 Data bucket containing lifecycle rules for avatars, posts, and attachments
-
   ** S3 Data bucket containing lifecycle rules for avatars, posts, and attachments
   ** This module provisions an S3 bucket with lifecycle rules for storing static media content.
   ** It allows efficient storage management and cost optimization for media assets.
@@ -188,8 +175,6 @@ module "s3_bucket" {
 }
 
 /**
-  ## 8. CloudFront Edge distribution for static media caching using OAC & TLS key groups
-
   ** CloudFront Edge distribution for static media caching using OAC & TLS key groups
   ** This module provisions a CloudFront distribution that caches static media content from the S3 bucket.
   ** It allows faster content delivery to users by leveraging edge locations globally.
@@ -216,8 +201,6 @@ module "cloudfront" {
 ## PHASE 4: DATA TIERS (PERSISTENCE)
 ## ==============================================================================
 /**
-  ## 9. Relational Database Service (RDS) Engine for state persistence in isolation
-
   ** Relational Database Service (RDS) Engine for state persistence in isolation
   ** This module provisions an RDS PostgreSQL instance for persistent data storage.
   ** It allows the application to store and retrieve data in a managed relational database.
@@ -231,7 +214,6 @@ module "rds" {
 
   #| Credentials
   master_username = var.database_username
-  master_password = var.database_password
 
   #| Network Configuration
   db_subnet_ids         = module.vpc.database_subnet_ids
@@ -264,13 +246,49 @@ module "rds" {
   enable_cloudwatch_logs_exports = ["postgresql"]
 }
 
+/**
+  ** ElastiCache Valkey cluster for caching and session management
+  ** This module provisions an ElastiCache Valkey cluster for caching and session management.
+  ** It allows the application to store and retrieve data quickly, improving performance and scalability.
+*/
+
+module "elasticache_valkey" {
+  source = "../../modules/elasticache"
+
+  #| Metadata
+  project_name = var.project_name
+  environment  = var.environment
+
+  #| Engine Configuration
+  engine_version = "8.0"
+  node_type      = "cache.t2.micro"
+
+  #| Network Configuration
+  database_subnet_ids            = module.vpc.database_subnet_ids
+  elasticache_security_group_ids = [module.security_group.elasticache_security_group_id]
+  port                           = var.elasticache_port
+
+  #| Topology
+  num_cache_clusters         = 1     # must be 2 if automatic_failover_enabled is true
+  automatic_failover_enabled = false # For learning purposes; set to true in production for HA
+  multi_az_enabled           = false # For learning purposes; set to true in production for HA
+
+  #| Security
+  at_rest_encryption_enabled = true
+  transit_encryption_enabled = true
+
+  #| Maintenance & Backup
+  apply_immediately        = true
+  maintenance_window       = "Sun:04:00-Sun:05:00"
+  snapshot_retention_limit = 7
+  snapshot_window          = "03:00-04:00"
+}
+
 
 ## ==============================================================================
 ## PHASE 5: COMPUTE TIERS & PUBLIC APP ENTRY POINTS
 ## ==============================================================================
 /**
-  ## 10. Public-facing Application Load Balancer to terminate TLS and forward traffic to ECS
-
   ** Public-facing Application Load Balancer to terminate TLS and forward traffic to ECS
   ** This module provisions an Application Load Balancer (ALB) that terminates TLS connections and forwards traffic to the ECS service.
   ** It allows secure access to the application from the Internet.
@@ -303,8 +321,6 @@ module "alb" {
 }
 
 /**
-  ## 11. ECS Fargate Cluster, Task Definitions, and Service Auto-scaling
-
   ** ECS Fargate Cluster, Task Definitions, and Service Auto-scaling
   ** This module provisions an ECS cluster, defines task definitions, and configures service auto-scaling.
   ** It allows the application to run in a serverless container environment with automatic scaling based on resource utilization.

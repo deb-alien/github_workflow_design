@@ -53,12 +53,6 @@ variable "master_username" {
   type        = string
 }
 
-variable "master_password" {
-  description = "The master password for the database"
-  type        = string
-  sensitive   = true
-}
-
 variable "db_port" {
   description = "The port on which the database accepts connections"
   type        = number

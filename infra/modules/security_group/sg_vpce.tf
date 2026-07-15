@@ -2,16 +2,11 @@
 # | VPC ENDPOINTS SECURITY GROUP (PRODUCTION READY)
 # ==============================================================================
 resource "aws_security_group" "vpce" {
-  name        = "${var.project_name}-${var.environment}-vpce-sg"
+  name        = local.vpce_security_group_name
   description = "Security group for Interface VPC Endpoints"
   vpc_id      = var.vpc_id
 
-  tags = merge(
-    local.common_tags,
-    {
-      Name = "${var.project_name}-${var.environment}-vpce-sg"
-    }
-  )
+  tags = merge(local.common_tags, { Name = local.vpce_security_group_name })
 }
 
 /**
