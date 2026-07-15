@@ -268,7 +268,7 @@ module "elasticache_valkey" {
 
   #| Engine Configuration
   engine_version = "8.0"
-  node_type      = "cache.t2.micro"
+  node_type      = "cache.t4g.micro"
 
   #| Network Configuration
   database_subnet_ids            = module.vpc.database_subnet_ids
