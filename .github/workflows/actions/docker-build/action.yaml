@@ -23,7 +23,7 @@ inputs:
     image_tag:
         description: 'The tag for the Docker image'
         required: false
-        default: 'true'
+        default: ''
 
     build_args:
         description: 'Build arguments for the Docker build'
@@ -44,12 +44,10 @@ runs:
           run: |
               IMAGE_URI="${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.image_tag }}"
 
-              docker buildx build \
+              docker build \
                   --file "${{ inputs.dockerfile }}" \
                   --build-arg "${{ inputs.build_args }}" \
                   --tag "$IMAGE_URI" \
-                  --push \
-                  --platform linux/amd64 \
                   "${{ inputs.context }}"
 
               docker push "$IMAGE_URI"
