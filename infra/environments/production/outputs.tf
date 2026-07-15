@@ -150,6 +150,23 @@ output "rds_monitoring_role_arn" {
   value       = module.rds.rds_monitoring_role_arn
   description = "The ARN of the RDS monitoring IAM role."
 }
+#-----------------------------------------------------------------------------
+#| ElastiCache Valkey Outputs
+#-----------------------------------------------------------------------------
+output "elasticache_valkey_endpoint" {
+  value       = module.elasticache_valkey.cache_endpoint
+  description = "The endpoint of the ElastiCache Valkey cluster"
+}
+
+output "elasticache_valkey_port" {
+  value       = module.elasticache_valkey.cache_port
+  description = "The port of the ElastiCache Valkey cluster"
+}
+
+output "elasticache_valkey_reader_endpoint" {
+  value       = module.elasticache_valkey.reader_endpoint_address
+  description = "The reader endpoint of the ElastiCache Valkey cluster"
+}
 
 #-----------------------------------------------------------------------------
 #| ECS Outputs
