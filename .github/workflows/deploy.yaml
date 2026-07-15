@@ -53,12 +53,26 @@ jobs:
 
             - name: Build and Push Docker Image to ECR
               id: docker
-              uses: ./.github/workflows/actions/docker-build
-              with:
-                  registry: ${{ steps.ecr-login.outputs.registry }}
-                  repository: ${{ steps.terraform.outputs.ecr_repository_name }}
-                  image_tag: ${{ github.sha }}
-                  context: backend
+              run: |
+                  REGISTRY="${{ steps.ecr-login.outputs.registry }}"
+                  REPOSITORY="${{ steps.terraform.outputs.ecr_repository_name }}"
+                  SHORT_SHA="${GITHUB_SHA::7}"
+                  
+                  IMAGE_URI_TAGGED="$REGISTRY/$REPOSITORY:$SHORT_SHA"
+                  
+                  echo "Compiling container layers for: $IMAGE_URI_TAGGED..."
+                  
+                  docker build \
+                    -t "$IMAGE_URI_TAGGED" \
+                    -t "$IMAGE_URI_LATEST" \
+                    -f Dockerfile \
+                    --build-arg NODE_ENV=production \
+                    .
+                    
+                  echo "Pushing compiled tags up to Amazon ECR registry storage..."
+                  docker push "$IMAGE_URI_TAGGED"
+                  
+                  echo "image_uri=$IMAGE_URI_TAGGED" >> $GITHUB_OUTPUT
 
             - name: Deploy to Amazon ECS
               uses: ./.github/workflows/actions/ecs-deploy
