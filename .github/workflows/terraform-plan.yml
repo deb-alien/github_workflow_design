@@ -66,11 +66,19 @@ jobs:
 
             - name: Terraform Production Plan
               id: plan
-              run: terraform plan -input=false -out=tfplan -no-color
+              run: |
+                  terraform plan \
+                   -input=false \
+                   -out=tfplan \
+                   -no-color \
+                   -detailed-exitcode
+                  terraform show -no-color tfplan > plan.txt
 
             - name: Upload Terraform Plan Artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: terraform-plan
-                  path: infra/environments/production/tfplan
+                  name: terraform-plan-production
+                  path: |
+                      infra/environments/production/tfplan
+                      infra/environments/production/plan.txt
                   retention-days: 7

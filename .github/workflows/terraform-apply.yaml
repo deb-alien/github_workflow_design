@@ -1,0 +1,48 @@
+name: 'Terraform Apply'
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - 'infra/environments/production/**'
+            - 'infra/modules/**'
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    id-token: write
+
+concurrency:
+    group: 'terraform-apply-${{ github.ref_name }}'
+    cancel-in-progress: true
+
+jobs:
+    terraform-apply:
+        name: Apply Terraform Changes
+        runs-on: ubuntu-latest
+        environment: production
+
+        defaults:
+            run:
+                working-directory: infra/environments/production
+                shell: bash
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v7
+
+            - name: Setup AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                  role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+                  aws-region: us-east-1
+
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v4
+              with:
+                  terraform_version: '1.15.0'
+
+            - name: Terraform Apply
+              run: |
+                  echo "yes"
