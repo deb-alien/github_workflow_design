@@ -39,13 +39,12 @@ jobs:
                       staging:
                           - 'infra/environments/staging/**'
                           - 'infra/modules/**'
-
                       production:
-                          - './**'
+                          - 'infra/environments/production/**'
                           - 'infra/modules/**'
 
     plan-staging:
-        name: Validate, Lint, and Plan
+        name: Plan and Archive Terraform Changes for Staging
         runs-on: ubuntu-latest
         needs: change-detection
         defaults:
@@ -79,7 +78,7 @@ jobs:
                   archive_retention_days: 7
 
     plan-production:
-        name: Validate, Lint, and Plan
+        name: Plan and Archive Terraform Changes for Production
         runs-on: ubuntu-latest
         needs: change-detection
         defaults:
