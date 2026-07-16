@@ -17,12 +17,13 @@ inputs:
 
 runs:
     using: composite
+    
     steps:
         - name: Setup Terraform
           uses: hashicorp/setup-terraform@v4
           with:
               terraform_version: ${{ inputs.terraform_version }}
-              
+
         - name: Setup TFLint
           uses: terraform-linters/setup-tflint@v6
           with:
@@ -31,13 +32,13 @@ runs:
         - name: Print current working directory
           shell: bash
           run: |
-              echo "Current working directory: $(pwd)"
-              echo "Working directory for Terraform commands: ${{ inputs.working_directory }}"
+              echo "Initial runner working directory: $(pwd)"
+              echo "Target working directory: ${{ inputs.working_directory }}"
 
         - name: Execute Format Validation and Offline Validation
           shell: bash
+          working-directory: ${{ inputs.working_directory }}
           run: |
-              cd ${{ inputs.working_directory }}
               echo "Verifying code formatting and standards recursively"
               terraform fmt -check -recursive ../../
 
@@ -49,8 +50,8 @@ runs:
 
         - name: Execute Deep Semantic Linting Analysis
           shell: bash
+          working-directory: ${{ inputs.working_directory }}
           run: |
-              cd ${{ inputs.working_directory }}
               echo "Initializing TFLint plugin architectures"
               tflint --init --chdir=../../
 

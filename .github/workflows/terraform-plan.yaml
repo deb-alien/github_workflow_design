@@ -56,7 +56,7 @@ jobs:
             - name: Terraform Setup and Validate
               uses: ./.github/workflows/actions/terraform-setup-and-validate
               with:
-                  working_directory: .
+                  working_directory: infra/environments/staging
                   terraform_version: '1.15.0'
                   tflint_version: 'latest'
 
@@ -89,7 +89,7 @@ jobs:
             - name: Terraform Setup and Validate
               uses: ./.github/workflows/actions/terraform-setup-and-validate
               with:
-                  working_directory: .
+                  working_directory: infra/environments/production
                   terraform_version: '1.15.0'
                   tflint_version: 'latest'
 

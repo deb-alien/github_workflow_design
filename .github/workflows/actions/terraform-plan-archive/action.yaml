@@ -28,19 +28,19 @@ runs:
           shell: bash
           run: |
               echo "Initial runner working directory: $(pwd)"
-              echo "Navigating into target directory: ${{ inputs.working_directory }}"
+              echo "Target working directory: ${{ inputs.working_directory }}"
 
         - name: Synchronize Active Remote Backend State Stores
           shell: bash
+          working-directory: ${{ inputs.working_directory }}
           run: |
-              cd "${{ inputs.working_directory }}"
               echo "Synchronizing active remote backend state stores for ${GITHUB_REF_NAME} environment"
               terraform init -input=false -reconfigure
 
         - name: Compute Spec and Render Binary Plan file
           shell: bash
+          working-directory: ${{ inputs.working_directory }}
           run: |
-              cd "${{ inputs.working_directory }}"
               echo "Calculating asset variations against target live cloud environments"
               terraform plan \
                 -input=false \
