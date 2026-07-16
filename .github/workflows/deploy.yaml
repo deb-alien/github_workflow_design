@@ -22,34 +22,26 @@ jobs:
     build-and-push:
         name: Build and Push Docker Image
         runs-on: ubuntu-latest
-        environment: production
-
         defaults:
             run:
                 working-directory: backend
                 shell: bash
-
         outputs:
             image_uri: ${{ steps.docker.outputs.image_uri }}
             image_tag: ${{ steps.docker.outputs.image_tag }}
-
+        environment: production
         steps:
-            - name: Checkout Code
-              uses: actions/checkout@v7
-
-            - name: Setup AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v6
+            - uses: actions/checkout@v7
+            - uses: aws-actions/configure-aws-credentials@v6
               with:
                   role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
                   aws-region: ${{ vars.AWS_REGION }}
 
-            - name: Login to Amazon ECR
+            - uses: aws-actions/amazon-ecr-login@v2
               id: ecr-login
-              uses: aws-actions/amazon-ecr-login@v2
 
-            - name: Build and Push Docker Image to ECR
+            - uses: ./.github/workflows/actions/docker-build
               id: docker
-              uses: ./.github/workflows/actions/docker-build
               with:
                   registry: ${{ steps.ecr-login.outputs.registry }}
                   repository: ${{ vars.AWS_ECR_REPOSITORY_NAME }}
@@ -62,16 +54,13 @@ jobs:
         needs: build-and-push
         environment: production
         steps:
-            - name: Checkout Code
-              uses: actions/checkout@v7
-
-            - name: Setup AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v6
+            - uses: actions/checkout@v7
+            - uses: aws-actions/configure-aws-credentials@v6
               with:
                   role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
                   aws-region: ${{ vars.AWS_REGION }}
 
-            - name: Deploy to Amazon ECS
+            - name: Deploy to AWS ECS
               uses: ./.github/workflows/actions/ecs-deploy
               with:
                   task-definition-family: ${{ vars.AWS_ECS_TASK_DEFINITION_FAMILY }}

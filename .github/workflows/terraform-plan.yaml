@@ -23,16 +23,14 @@ concurrency:
 
 jobs:
     change-detection:
-        runs-on: ubuntu-latest
         name: Detect Changes in Terraform Files
+        runs-on: ubuntu-latest
         outputs:
             staging: ${{ steps.filter.outputs.staging }}
             production: ${{ steps.filter.outputs.production }}
         steps:
-            - name: Checkout Code
-              uses: actions/checkout@v7
-            - name: Detect Changes
-              uses: dorny/paths-filter@v4
+            - uses: actions/checkout@v7
+            - uses: dorny/paths-filter@v4
               id: filter
               with:
                   filters: |
@@ -45,8 +43,8 @@ jobs:
 
     plan-staging:
         name: Plan Staging
-        runs-on: ubuntu-latest
         needs: change-detection
+        runs-on: ubuntu-latest
         defaults:
             run:
                 working-directory: infra/environments/staging
@@ -54,11 +52,8 @@ jobs:
         environment: staging
         if: ${{ github.event_name == 'workflow_dispatch' || needs.change-detection.outputs.staging == 'true' }}
         steps:
-            - name: Checkout Code
-              uses: actions/checkout@v7
-
-            - name: Setup AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v6
+            - uses: actions/checkout@v7
+            - uses: aws-actions/configure-aws-credentials@v6
               with:
                   role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
                   aws-region: ${{ vars.AWS_REGION }}
@@ -92,11 +87,8 @@ jobs:
         environment: production
         if: ${{ github.event_name == 'workflow_dispatch' || needs.change-detection.outputs.production == 'true' }}
         steps:
-            - name: Checkout Code
-              uses: actions/checkout@v7
-
-            - name: Setup AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v6
+            - uses: actions/checkout@v7
+            - uses: aws-actions/configure-aws-credentials@v6
               with:
                   role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
                   aws-region: ${{ vars.AWS_REGION }}

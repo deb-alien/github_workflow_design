@@ -41,18 +41,13 @@ jobs:
               uses: ./.github/workflows/actions/setup-terraform/action.yaml
               with:
                   working_directory: infra/environments/production
-
-            - name: Terraform Plan
-              run: |
+            - run: |
                   terraform plan -input=false -out=tfplan
-                  terraform show -no-color tfplan > plan.txt
-
-            - name: Terraform Apply
-              run: |
+            - run: |
                   terraform apply -input=false tfplan
-
-            - name: Save Terraform Output
-              run: |
+            - run: |
+                  terraform show -no-color tfplan > plan.txt
+            - run: |
                   terraform output -json > output.json
 
             - name: Upload Terraform Output
