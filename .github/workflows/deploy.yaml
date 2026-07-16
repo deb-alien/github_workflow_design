@@ -56,9 +56,9 @@ jobs:
             - name: Deploy to Amazon ECS
               uses: ./.github/workflows/actions/ecs-deploy
               with:
+                  task-definition-family: ${{ vars.AWS_ECS_TASK_DEFINITION_FAMILY }}
                   cluster: ${{ vars.AWS_ECS_CLUSTER_NAME }}
                   service: ${{ vars.AWS_ECS_SERVICE_NAME }}
-                  task-definition-family: ${{ vars.AWS_ECS_TASK_DEFINITION_FAMILY }}
-                  image-uri: ${{ steps.docker.outputs.image_uri }}
                   container-name: ${{ vars.AWS_ECR_CONTAINER_NAME }}
+                  image-uri: ${{ steps.docker.outputs.image_uri }}
                   rollback-on-failure: true
