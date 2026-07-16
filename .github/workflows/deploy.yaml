@@ -46,8 +46,7 @@ jobs:
               with:
                   registry: ${{ steps.ecr-login.outputs.registry }}
                   repository: ${{ vars.AWS_ECR_REPOSITORY_NAME }}
-                  image_tag: ${{ github.sha }}
-                  context: .
+                  context: backend
                   build_args: 'NODE_ENV=production'
 
     deploy-production:
