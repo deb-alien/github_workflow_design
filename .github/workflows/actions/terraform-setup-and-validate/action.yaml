@@ -10,6 +10,10 @@ inputs:
         description: 'The version of TFLint to install'
         required: false
         default: 'latest'
+    working_directory:
+        description: 'The working directory for Terraform commands'
+        required: false
+        default: '.'
 
 runs:
     using: composite
@@ -26,6 +30,7 @@ runs:
         - name: Execute Format Validation and Offline Validation
           shell: bash
           run: |
+              cd ${{ inputs.working_directory }}
               echo "Verifying code formatting and standards recursively"
               terraform fmt -check -recursive ../../
 
@@ -38,6 +43,7 @@ runs:
         - name: Execute Deep Semantic Linting Analysis
           shell: bash
           run: |
+              cd ${{ inputs.working_directory }}
               echo "Initializing TFLint plugin architectures"
               tflint --init --chdir=../../
 
