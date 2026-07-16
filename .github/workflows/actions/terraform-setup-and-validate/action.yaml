@@ -27,6 +27,12 @@ runs:
           with:
               tflint_version: ${{ inputs.tflint_version }}
 
+        - name: Print current working directory
+          shell: bash
+          run: |
+              echo "Current working directory: $(pwd)"
+              echo "Working directory for Terraform commands: ${{ inputs.working_directory }}"
+
         - name: Execute Format Validation and Offline Validation
           shell: bash
           run: |

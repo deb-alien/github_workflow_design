@@ -68,12 +68,14 @@ jobs:
               with:
                   terraform_version: '1.15.0'
                   tflint_version: latest
+                  working_directory: .
 
             - name: Terraform Staging Plan and Archive
               uses: ./.github/workflows/actions/terraform-plan-archive
               with:
                   environment: staging
                   archive_name: terraform-plan-staging
+                  working_directory: .
                   archive_path: .
                   archive_retention_days: 7
 
@@ -102,11 +104,13 @@ jobs:
               with:
                   terraform_version: '1.15.0'
                   tflint_version: latest
+                  working_directory: .
 
             - name: Terraform Production Plan and Archive
               uses: ./.github/workflows/actions/terraform-plan-archive
               with:
                   environment: production
                   archive_name: terraform-plan-production
+                  working_directory: .
                   archive_path: .
                   archive_retention_days: 7

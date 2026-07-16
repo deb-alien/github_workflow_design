@@ -15,19 +15,30 @@ inputs:
     archive_path:
         description: 'The path to the directory where the plan files will be archived'
         required: true
+    working_directory:
+        description: 'The path directory to the target environment code deployment configurations'
+        required: true
 
 runs:
-    using: 'composite'
+    using: composite
     steps:
+        - name: Print current working directory
+          shell: bash
+          run: |
+              echo "Current working directory: $(pwd)"
+              echo "Working directory for Terraform commands: ${{ inputs.working_directory }}"
+
         - name: Synchronize Active Remote Backend State Stores
           shell: bash
           run: |
+              cd "${{ inputs.working_directory }}"
               echo "Synchronizing active remote backend state stores for ${GITHUB_REF_NAME} environment"
               terraform init -input=false -reconfigure
 
         - name: Compute Spec and Render Binary Plan file
           shell: bash
           run: |
+              cd "${{ inputs.working_directory }}"
               echo "Calculating asset variations against target live cloud environments"
               terraform plan \
                 -input=false \
