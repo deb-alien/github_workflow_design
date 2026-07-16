@@ -1,6 +1,6 @@
 name: ECS Deploy
 
-description: Deploy a new Docker image to an ECS Service
+description: Deploy a Docker image to Amazon ECS
 
 inputs:
     cluster:
@@ -30,47 +30,74 @@ runs:
     using: composite
 
     steps:
-        - shell: bash
-          run: chmod +x ${{ github.action_path }}/scripts/*.sh
-
-        - id: current
+        - name: Make scripts executable
           shell: bash
           run: |
-              CURRENT=$(
-                ${{ github.action_path }}/scripts/describe-service.sh \
-                "${{ inputs.cluster }}" \
-                "${{ inputs.service }}"
-              )
+              chmod +x "${{ github.action_path }}/scripts/"*.sh
 
-              echo "current=$CURRENT" >> "$GITHUB_OUTPUT"
+        ############################################################
+        # Save currently deployed Task Definition
+        ############################################################
 
-        - shell: bash
+        - name: Get Current Task Definition
+          id: current
+          shell: bash
           run: |
-              ${{ github.action_path }}/scripts/download-task-definition.sh \
-                "${{ inputs.task-definition-family }}" \
+              CURRENT_TASK=$(aws ecs describe-services \
+                --cluster "${{ inputs.cluster }}" \
+                --services "${{ inputs.service }}" \
+                --query "services[0].taskDefinition" \
+                --output text)
+
+              echo "task-definition=$CURRENT_TASK" >> "$GITHUB_OUTPUT"
+
+        ############################################################
+        # Download current Task Definition JSON
+        ############################################################
+
+        - name: Download Task Definition
+          shell: bash
+          run: |
+              aws ecs describe-task-definition \
+                --task-definition "${{ inputs.task-definition-family }}" \
+                --query taskDefinition \
                 > task-definition.json
 
-        - shell: bash
-          run: |
-              cat task-definition.json |
-              ${{ github.action_path }}/scripts/render-task-definition.sh \
-                "${{ inputs.image-uri }}" \
-                "${{ inputs.container-name }}" \
-                > new-task-definition.json
+        ############################################################
+        # Replace container image
+        ############################################################
 
-        - id: register
+        - name: Render Task Definition
+          id: render
+          uses: aws-actions/amazon-ecs-render-task-definition@v1
+          with:
+              task-definition: task-definition.json
+              container-name: ${{ inputs.container-name }}
+              image: ${{ inputs.image-uri }}
+
+        ############################################################
+        # Deploy
+        ############################################################
+
+        - name: Deploy ECS Service
+          id: deploy
+          uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+          continue-on-error: true
+          with:
+              task-definition: ${{ steps.render.outputs.task-definition }}
+              cluster: ${{ inputs.cluster }}
+              service: ${{ inputs.service }}
+              wait-for-service-stability: true
+
+        ############################################################
+        # Rollback
+        ############################################################
+
+        - name: Rollback Deployment
+          if: failure() && inputs.rollback-on-failure == 'true'
           shell: bash
           run: |
-              TASK=$(
-                ${{ github.action_path }}/scripts/register-task-definition.sh \
-                  new-task-definition.json
-              )
-
-              echo "task=$TASK" >> "$GITHUB_OUTPUT"
-
-        - shell: bash
-          run: |
-              ${{ github.action_path }}/scripts/deploy.sh \
+              "${{ github.action_path }}/scripts/rollback.sh" \
                 "${{ inputs.cluster }}" \
                 "${{ inputs.service }}" \
-                "${{ steps.register.outputs.task }}"
+                "${{ steps.current.outputs.task-definition }}"

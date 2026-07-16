@@ -59,5 +59,6 @@ jobs:
                   cluster: ${{ vars.AWS_ECS_CLUSTER_NAME }}
                   service: ${{ vars.AWS_ECS_SERVICE_NAME }}
                   task-definition-family: ${{ vars.AWS_ECS_TASK_DEFINITION_FAMILY }}
-                  container-name: ${{ vars.AWS_ECS_CONTAINER_NAME }}
                   image-uri: ${{ steps.docker.outputs.image_uri }}
+                  container-name: ${{ vars.AWS_ECR_CONTAINER_NAME }}
+                  rollback-on-failure: true
