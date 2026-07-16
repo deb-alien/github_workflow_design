@@ -47,7 +47,8 @@ runs:
           run: |
               REPOSITORY="${{ inputs.repository }}"
               REGISTRY="${{ inputs.registry }}"
-              IMAGE_TAG="${{ inputs.image_tag }}"
+              TAG="${{ inputs.image_tag }}"
+              IMAGE_TAG="${TAG:0:7}"
               FULL_IMAGE_URI="$REGISTRY/$REPOSITORY:$IMAGE_TAG"
 
               DOCKER_BUILD_FLAGS=()
