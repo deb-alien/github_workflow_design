@@ -43,29 +43,21 @@ jobs:
               id: ecr-login
               uses: aws-actions/amazon-ecr-login@v2
 
-            - name: Read Terraform Outputs
-              id: terraform
-              uses: ./.github/workflows/actions/terraform-outputs
-              with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  workflow: .github/workflows/terraform-apply.yaml
-                  branch: main
-
             - name: Build and Push Docker Image to ECR
               id: docker
               uses: ./.github/workflows/actions/docker-build
               with:
                   registry: ${{ steps.ecr-login.outputs.registry }}
-                  repository: ${{ steps.terraform.outputs.ecr_repository_name }}
+                  repository: ${{ vars.AWS_ECR_REPOSITORY_NAME }}
                   image_tag: ${{ github.sha }}
                   context: backend
-                  build_args: "NODE_ENV=production"
+                  build_args: 'NODE_ENV=production'
 
             - name: Deploy to Amazon ECS
               uses: ./.github/workflows/actions/ecs-deploy
               with:
-                  cluster: ${{ steps.terraform.outputs.ecs_cluster_name }}
-                  service: ${{ steps.terraform.outputs.ecs_service_name }}
-                  task-definition-family: ${{ steps.terraform.outputs.ecs_task_definition_family }}
+                  cluster: ${{ vars.AWS_ECS_CLUSTER_NAME }}
+                  service: ${{ vars.AWS_ECS_SERVICE_NAME }}
+                  task-definition-family: ${{ vars.AWS_ECS_TASK_DEFINITION_FAMILY }}
+                  container-name: ${{ vars.AWS_ECS_CONTAINER_NAME }}
                   image-uri: ${{ steps.docker.outputs.image_uri }}
-                  container-name: ${{ steps.terraform.outputs.container_name }}
