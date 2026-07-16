@@ -16,6 +16,11 @@ inputs:
         description: 'The path directory to the target environment code deployment configurations'
         required: true
 
+outputs:
+    archive_url:
+        description: 'The URL of the archived plan files'
+        value: ${{ steps.archive.outputs.artifact_url }}
+
 runs:
     using: composite
     steps:
@@ -46,7 +51,8 @@ runs:
               terraform show -no-color tfplan > plan.txt
 
         - name: Archive Plan Files
-          uses: actions/upload-artifact@v4
+          id: archive
+          uses: actions/upload-artifact@v7
           with:
               name: ${{ inputs.archive_name }}
               #| FIXED: Points directly to where the files were generated inside the workspace

@@ -69,12 +69,17 @@ jobs:
                   working_directory: infra/environments/staging
 
             - name: Terraform Staging Plan and Archive
+              id: archive
               uses: ./.github/workflows/actions/terraform-plan-archive
               with:
                   environment: staging
                   archive_name: terraform-plan-staging
                   working_directory: infra/environments/staging
                   archive_retention_days: 7
+
+            - name: Artifact URL
+              run: |
+                  echo "Terraform plan files archived at: ${{ steps.archive.outputs.archive_url }}"
 
     plan-production:
         name: Plan and Archive Terraform Changes for Production
@@ -102,9 +107,14 @@ jobs:
                   working_directory: infra/environments/production
 
             - name: Terraform Production Plan and Archive
+              id: archive
               uses: ./.github/workflows/actions/terraform-plan-archive
               with:
                   environment: production
                   archive_name: terraform-plan-production
                   working_directory: infra/environments/production
                   archive_retention_days: 7
+
+            - name: Artifact URL
+              run: |
+                  echo "Terraform plan files archived at: ${{ steps.archive.outputs.archive_url }}"
