@@ -17,9 +17,9 @@ inputs:
         required: true
 
 outputs:
-    archive_url:
+    artifact_url:
         description: 'The URL of the archived plan files'
-        value: ${{ steps.archive.outputs.artifact_url }}
+        value: ${{ steps.archive.outputs.artifact-url }}
 
 runs:
     using: composite
@@ -55,7 +55,6 @@ runs:
           uses: actions/upload-artifact@v7
           with:
               name: ${{ inputs.archive_name }}
-              #| FIXED: Points directly to where the files were generated inside the workspace
               path: |
                   ${{ inputs.working_directory }}/tfplan
                   ${{ inputs.working_directory }}/plan.txt

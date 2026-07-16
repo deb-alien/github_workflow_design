@@ -79,7 +79,7 @@ jobs:
 
             - name: Artifact URL
               run: |
-                  echo "Terraform plan files archived at: ${{ steps.archive.outputs.archive_url }}"
+                  echo "Terraform plan files archived at: ${{ steps.archive.outputs.artifact_url }}"
 
     plan-production:
         name: Plan Production
@@ -117,4 +117,4 @@ jobs:
 
             - name: Artifact URL
               run: |
-                  echo "Terraform plan files archived at: ${{ steps.archive.outputs.archive_url }}"
+                  echo "Terraform plan files archived at: ${{ steps.archive.outputs.artifact_url }}"
