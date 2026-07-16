@@ -40,7 +40,8 @@ jobs:
             - uses: aws-actions/amazon-ecr-login@v2
               id: ecr-login
 
-            - uses: ./.github/workflows/actions/docker-build
+            - name: Build and Push Docker Image
+              uses: ./.github/workflows/actions/docker-build
               id: docker
               with:
                   registry: ${{ steps.ecr-login.outputs.registry }}
