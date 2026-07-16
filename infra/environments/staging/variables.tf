@@ -19,6 +19,7 @@ variable "environment" {
 variable "vpc_cidr" {
   description = "The CIDR block for the VPC."
   type        = string
+  default     = "10.0.0.0/16"
   validation {
     condition     = can(cidrhost(var.vpc_cidr, 0))
     error_message = "The VPC CIDR block is not valid."
@@ -76,6 +77,7 @@ variable "memory" {
 variable "terraform_remote_state_bucket" {
   description = "The S3 bucket name for storing Terraform remote state."
   type        = string
+    default     = "production-api-tf-state"
 }
 
 variable "terraform_remote_state_key" {
