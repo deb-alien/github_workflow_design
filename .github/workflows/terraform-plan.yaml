@@ -74,7 +74,6 @@ jobs:
                   environment: staging
                   archive_name: terraform-plan-staging
                   working_directory: infra/environments/staging
-                  archive_path: .
                   archive_retention_days: 7
 
     plan-production:
@@ -108,5 +107,4 @@ jobs:
                   environment: production
                   archive_name: terraform-plan-production
                   working_directory: infra/environments/production
-                  archive_path: .
                   archive_retention_days: 7

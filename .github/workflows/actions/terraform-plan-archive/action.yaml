@@ -12,9 +12,6 @@ inputs:
         description: 'The number of days to retain the archived plan files'
         required: false
         default: '7'
-    archive_path:
-        description: 'The path to the directory where the plan files will be archived'
-        required: true
     working_directory:
         description: 'The path directory to the target environment code deployment configurations'
         required: true
@@ -42,11 +39,11 @@ runs:
               echo "Calculating asset variations against target live cloud environments"
               terraform plan \
                 -input=false \
-                -out=${{ inputs.archive_path }}/tfplan \
+                -out=tfplan \
                 -detailed-exitcode
 
               echo "Generating human-readable plan file"
-              terraform show -no-color ${{ inputs.archive_path }}/tfplan > ${{ inputs.archive_path }}/plan.txt
+              terraform show -no-color tfplan > plan.txt
 
         - name: Archive Plan Files
           uses: actions/upload-artifact@v4
@@ -54,6 +51,6 @@ runs:
               name: ${{ inputs.archive_name }}
               #| FIXED: Points directly to where the files were generated inside the workspace
               path: |
-                  ${{ inputs.working_directory }}/${{ inputs.archive_path }}/tfplan
-                  ${{ inputs.working_directory }}/${{ inputs.archive_path }}/plan.txt
+                  ${{ inputs.working_directory }}/tfplan
+                  ${{ inputs.working_directory }}/plan.txt
               retention-days: ${{ inputs.archive_retention_days }}
