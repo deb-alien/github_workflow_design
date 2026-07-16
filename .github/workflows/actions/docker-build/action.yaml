@@ -30,6 +30,15 @@ inputs:
         required: false
         default: ''
 
+outputs:
+    image_uri:
+        description: 'The full URI of the pushed Docker image'
+        value: ${{ steps.build.outputs.image_uri }}
+
+    image_tag:
+        description: 'The tag of the pushed Docker image'
+        value: ${{ steps.build.outputs.image_tag }}
+
 runs:
     using: composite
     steps:
@@ -44,25 +53,23 @@ runs:
               DOCKER_BUILD_FLAGS=()
 
 
-                if [ -n "${{ inputs.build_args }}" ]; then
-                  # Loop through each space-separated arg and append a separate '--build-arg' switch
-                  for arg in ${{ inputs.build_args }}; do
-                    DOCKER_BUILD_FLAGS+=(--build-arg "$arg")
-                  done
-                fi
+              if [ -n "${{ inputs.build_args }}" ]; then
+                # Loop through each space-separated arg and append a separate '--build-arg' switch
+                for arg in ${{ inputs.build_args }}; do
+                DOCKER_BUILD_FLAGS+=(--build-arg "$arg")
+                done
+              fi
 
                 echo "Compiling container layers for: $FULL_IMAGE_URI..."
 
-                #| 2. Execute the build expanding the flag array parameters dynamically
-                docker build \
-                  --file "${{ inputs.context }}/${{ inputs.dockerfile }}" \
-                  "${DOCKER_BUILD_FLAGS[@]}" \
-                  --tag "$FULL_IMAGE_URI" \
-                  "${{ inputs.context }}"
+              docker build \
+                --file "${{ inputs.context }}/${{ inputs.dockerfile }}" \
+                "${DOCKER_BUILD_FLAGS[@]}" \
+                --tag "$FULL_IMAGE_URI" \
+                "${{ inputs.context }}"
 
-                echo "Pushing image to Amazon ECR..."
-                docker push "$FULL_IMAGE_URI"
+               echo "Pushing image to Amazon ECR..."
+               docker push "$FULL_IMAGE_URI"
 
-                #| 3. Export data metrics safely out to parent pipeline environments
-                echo "image_uri=$FULL_IMAGE_URI" >> $GITHUB_OUTPUT
-                echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+               echo "image_uri=$FULL_IMAGE_URI" >> $GITHUB_OUTPUT
+               echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
