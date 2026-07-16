@@ -53,6 +53,9 @@ jobs:
                   context: backend
                   build_args: 'NODE_ENV=production'
 
+            - name: Image URI
+              run: echo ${{ steps.docker.outputs.image_uri }}
+
             - name: Deploy to Amazon ECS
               uses: ./.github/workflows/actions/ecs-deploy
               with:
