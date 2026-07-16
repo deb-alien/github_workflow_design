@@ -40,8 +40,7 @@ jobs:
             - name: Setup Terraform
               uses: ./.github/workflows/actions/setup-terraform/action.yaml
               with:
-                  terraform_version: '1.15.0'
-                  tflint_version: latest
+                  working_directory: infra/environments/production
 
             - name: Terraform Plan
               run: |
