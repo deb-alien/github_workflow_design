@@ -77,7 +77,7 @@ variable "memory" {
 variable "terraform_remote_state_bucket" {
   description = "The S3 bucket name for storing Terraform remote state."
   type        = string
-    default     = "production-api-tf-state"
+  default     = "production-api-tf-state"
 }
 
 variable "terraform_remote_state_key" {
