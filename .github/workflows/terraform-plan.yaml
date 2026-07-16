@@ -66,16 +66,14 @@ jobs:
             - name: Terraform Setup and Validate
               uses: ./.github/workflows/actions/terraform-setup-and-validate
               with:
-                  terraform_version: '1.15.0'
-                  tflint_version: latest
-                  working_directory: .
+                  working_directory: infra/environments/staging
 
             - name: Terraform Staging Plan and Archive
               uses: ./.github/workflows/actions/terraform-plan-archive
               with:
                   environment: staging
                   archive_name: terraform-plan-staging
-                  working_directory: .
+                  working_directory: infra/environments/staging
                   archive_path: .
                   archive_retention_days: 7
 
@@ -102,15 +100,13 @@ jobs:
             - name: Terraform Setup and Validate
               uses: ./.github/workflows/actions/terraform-setup-and-validate
               with:
-                  terraform_version: '1.15.0'
-                  tflint_version: latest
-                  working_directory: .
+                  working_directory: infra/environments/production
 
             - name: Terraform Production Plan and Archive
               uses: ./.github/workflows/actions/terraform-plan-archive
               with:
                   environment: production
                   archive_name: terraform-plan-production
-                  working_directory: .
+                  working_directory: infra/environments/production
                   archive_path: .
                   archive_retention_days: 7
