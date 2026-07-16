@@ -4,21 +4,27 @@ description: Deploy a Docker image to Amazon ECS
 
 inputs:
     cluster:
+        description: 'The name of the Amazon ECS cluster'
         required: true
 
     service:
+        description: 'The name of the Amazon ECS service'
         required: true
 
     task-definition-family:
+        description: 'The family of the Amazon ECS task definition'
         required: true
 
     image-uri:
+        description: 'The URI of the Docker image to deploy'
         required: true
 
     container-name:
+        description: 'The name of the container in the task definition to update'
         required: true
 
     rollback-on-failure:
+        description: 'Whether to rollback the deployment if it fails'
         required: false
         default: 'true'
 
