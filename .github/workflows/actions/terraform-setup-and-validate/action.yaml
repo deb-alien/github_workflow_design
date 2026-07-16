@@ -22,6 +22,7 @@ runs:
           uses: hashicorp/setup-terraform@v4
           with:
               terraform_version: ${{ inputs.terraform_version }}
+              
         - name: Setup TFLint
           uses: terraform-linters/setup-tflint@v6
           with:
