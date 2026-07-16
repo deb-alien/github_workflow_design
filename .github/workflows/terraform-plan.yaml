@@ -67,10 +67,6 @@ jobs:
                   working_directory: infra/environments/staging
                   archive_retention_days: 7
 
-            - name: Artifact URL
-              run: |
-                  echo "Terraform plan files archived at: ${{ steps.archive.outputs.artifact_url }}"
-
     plan-production:
         name: Plan Production
         runs-on: ubuntu-latest
@@ -101,7 +97,3 @@ jobs:
                   archive_name: terraform-plan-production
                   working_directory: infra/environments/production
                   archive_retention_days: 7
-
-            - name: Artifact URL
-              run: |
-                  echo "Terraform plan files archived at: ${{ steps.archive.outputs.artifact_url }}"
