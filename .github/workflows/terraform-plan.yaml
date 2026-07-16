@@ -6,7 +6,8 @@ on:
         branches:
             - main
         paths:
-            - 'infra/environments/production/**'
+            - './**'
+            - 'infra/environments/staging/**'
             - 'infra/modules/**'
             - '.github/workflows/terraform-plan.yaml'
     workflow_dispatch:
@@ -21,14 +22,38 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    terraform-plan:
+    change-detection:
+        runs-on: ubuntu-latest
+        name: Detect Changes in Terraform Files
+        outputs:
+            staging: ${{ steps.filter.outputs.staging }}
+            production: ${{ steps.filter.outputs.production }}
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v7
+            - name: Detect Changes
+              uses: dorny/paths-filter@v4
+              id: filter
+              with:
+                  filters: |
+                      staging:
+                          - 'infra/environments/staging/**'
+                          - 'infra/modules/**'
+
+                      production:
+                          - './**'
+                          - 'infra/modules/**'
+
+    plan-staging:
         name: Validate, Lint, and Plan
         runs-on: ubuntu-latest
+        needs: change-detection
         defaults:
             run:
-                working-directory: infra/environments/production
+                working-directory: infra/environments/staging
                 shell: bash
-        environment: production
+        environment: staging
+        if: ${{ github.event_name == 'workflow_dispatch' || needs.change-detection.outputs.staging == 'true' }}
         steps:
             - name: Checkout Code
               uses: actions/checkout@v7
@@ -39,44 +64,50 @@ jobs:
                   role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
                   aws-region: ${{ vars.AWS_REGION }}
 
-            - name: Setup Terraform
-              uses: hashicorp/setup-terraform@v4
+            - name: Terraform Setup and Validate
+              uses: ./.github/workflows/actions/terraform-setup-and-validate
               with:
                   terraform_version: '1.15.0'
-
-            - name: Setup TFLint
-              uses: terraform-linters/setup-tflint@v6
-              with:
                   tflint_version: latest
 
-            - name: Terraform Format & Init Validate
-              run: |
-                  terraform fmt -check -recursive ../../
-                  terraform init -backend=false
-                  terraform validate
-
-            - name: Run TFLint
-              run: |
-                  tflint --init --chdir=../../
-                  tflint --recursive --chdir=../../
-
-            - name: Terraform Production Init
-              run: terraform init -input=false
-
-            - name: Terraform Production Plan
-              id: plan
-              run: |
-                  terraform plan \
-                   -input=false \
-                   -out=tfplan \
-                   -detailed-exitcode
-                  terraform show -no-color tfplan > plan.txt
-
-            - name: Upload Terraform Plan Artifact
-              uses: actions/upload-artifact@v7
+            - name: Terraform Staging Plan and Archive
+              uses: ./.github/workflows/actions/terraform-plan-archive
               with:
-                  name: terraform-plan-production
-                  path: |
-                      infra/environments/production/tfplan
-                      infra/environments/production/plan.txt
-                  retention-days: 7
+                  environment: staging
+                  archive_name: terraform-plan-staging
+                  archive_path: .
+                  archive_retention_days: 7
+
+    plan-production:
+        name: Validate, Lint, and Plan
+        runs-on: ubuntu-latest
+        needs: change-detection
+        defaults:
+            run:
+                working-directory: infra/environments/production
+                shell: bash
+        environment: production
+        if: ${{ github.event_name == 'workflow_dispatch' || needs.change-detection.outputs.production == 'true' }}
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v7
+
+            - name: Setup AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                  role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+                  aws-region: ${{ vars.AWS_REGION }}
+
+            - name: Terraform Setup and Validate
+              uses: ./.github/workflows/actions/terraform-setup-and-validate
+              with:
+                  terraform_version: '1.15.0'
+                  tflint_version: latest
+
+            - name: Terraform Production Plan and Archive
+              uses: ./.github/workflows/actions/terraform-plan-archive
+              with:
+                  environment: production
+                  archive_name: terraform-plan-production
+                  archive_path: .
+                  archive_retention_days: 7

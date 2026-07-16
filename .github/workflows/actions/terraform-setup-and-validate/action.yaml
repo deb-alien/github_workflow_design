@@ -1,0 +1,45 @@
+name: Terraform Setup and Validate
+description: Setup Terraform and validate configuration files
+
+inputs:
+    terraform_version:
+        description: 'The version of Terraform to install'
+        required: false
+        default: '1.15.0'
+    tflint_version:
+        description: 'The version of TFLint to install'
+        required: false
+        default: 'latest'
+
+runs:
+    using: composite
+    steps:
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v4
+          with:
+              terraform_version: ${{ inputs.terraform_version }}
+        - name: Setup TFLint
+          uses: terraform-linters/setup-tflint@v6
+          with:
+              tflint_version: ${{ inputs.tflint_version }}
+
+        - name: Execute Format Validation and Offline Validation
+          shell: bash
+          run: |
+              echo "Verifying code formatting and standards recursively"
+              terraform fmt -check -recursive ../../
+
+              echo "Execute mock-initialization"
+              terraform init -backend=false
+
+              echo "Validating syntax schema layouts"
+              terraform validate
+
+        - name: Execute Deep Semantic Linting Analysis
+          shell: bash
+          run: |
+              echo "Initializing TFLint plugin architectures"
+              tflint --init --chdir=../../
+
+              echo "Executing recursive semantic evaluations"
+              tflint --recursive --chdir=../../

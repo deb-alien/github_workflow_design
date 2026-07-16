@@ -29,6 +29,10 @@ jobs:
                 working-directory: backend
                 shell: bash
 
+        outputs:
+            image_uri: ${{ steps.docker.outputs.image_uri }}
+            image_tag: ${{ steps.docker.outputs.image_tag }}
+
         steps:
             - name: Checkout Code
               uses: actions/checkout@v7
@@ -50,11 +54,22 @@ jobs:
                   registry: ${{ steps.ecr-login.outputs.registry }}
                   repository: ${{ vars.AWS_ECR_REPOSITORY_NAME }}
                   image_tag: ${{ github.sha }}
-                  context: backend
+                  context: .
                   build_args: 'NODE_ENV=production'
 
-            - name: Image URI
-              run: echo ${{ steps.docker.outputs.image_uri }}
+    deploy-production:
+        runs-on: ubuntu-latest
+        needs: build-and-push
+        environment: production
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v7
+
+            - name: Setup AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                  role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+                  aws-region: ${{ vars.AWS_REGION }}
 
             - name: Deploy to Amazon ECS
               uses: ./.github/workflows/actions/ecs-deploy
@@ -63,5 +78,5 @@ jobs:
                   cluster: ${{ vars.AWS_ECS_CLUSTER_NAME }}
                   service: ${{ vars.AWS_ECS_SERVICE_NAME }}
                   container-name: ${{ vars.AWS_ECS_CONTAINER_NAME }}
-                  image-uri: ${{ steps.docker.outputs.image_uri }}
+                  image-uri: ${{ needs.build-and-push.outputs.image_uri }}
                   rollback-on-failure: true

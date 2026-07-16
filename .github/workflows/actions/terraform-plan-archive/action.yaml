@@ -1,0 +1,47 @@
+name: 'Terraform Plan Archive'
+description: 'Archive Terraform plan files for future reference'
+
+inputs:
+    environment:
+        description: 'The environment for which the plan files are being archived'
+        required: true
+    archive_name:
+        description: 'The name of the archive file'
+        required: true
+    archive_retention_days:
+        description: 'The number of days to retain the archived plan files'
+        required: false
+        default: '7'
+    archive_path:
+        description: 'The path to the directory where the plan files will be archived'
+        required: true
+
+runs:
+    using: 'composite'
+    steps:
+        - name: Synchronize Active Remote Backend State Stores
+          shell: bash
+          run: |
+              echo "Synchronizing active remote backend state stores for ${GITHUB_REF_NAME} environment"
+              terraform init -input=false -reconfigure
+
+        - name: Compute Spec and Render Binary Plan file
+          shell: bash
+          run: |
+              echo "Calculating asset variations against target live cloud environments"
+              terraform plan \
+                -input=false \
+                -out=${{ inputs.archive_path }}/tfplan \
+                -detailed-exitcode
+
+              echo "Generating human-readable plan file"
+              terraform show -no-color ${{ inputs.archive_path }}/tfplan > ${{ inputs.archive_path }}/plan.txt
+
+        - name: Archive Plan Files
+          uses: actions/upload-artifact@v4
+          with:
+              name: ${{ inputs.archive_name }}
+              path: |
+                  infra/environments/${{ inputs.environment }}/tfplan
+                  infra/environments/${{ inputs.environment }}/plan.txt
+              retention-days: ${{ inputs.archive_retention_days }}

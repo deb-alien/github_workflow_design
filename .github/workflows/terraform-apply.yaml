@@ -38,13 +38,10 @@ jobs:
                   aws-region: ${{ vars.AWS_REGION }}
 
             - name: Setup Terraform
-              uses: hashicorp/setup-terraform@v4
+              uses: ./.github/workflows/actions/setup-terraform/action.yaml
               with:
-                  terraform_version: '1.15.0'
-
-            - name: Terraform Init
-              run: |
-                  terraform init -input=false
+                  terraform_version: "1.15.0"
+                  tflint_version: latest
 
             - name: Terraform Plan
               run: |
