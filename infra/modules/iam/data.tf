@@ -1,3 +1,11 @@
+data "aws_caller_identity" "current" {}
+data "aws_partition" "current" {}
+data "aws_region" "current" {}
+
+data "aws_kms_key" "ssm" {
+  key_id = "alias/aws/ssm"
+}
+
 /**
 ** Create an IAM policy document for ECS task role trust relationship.
 */
@@ -63,12 +71,4 @@ data "aws_iam_policy_document" "application" {
     actions   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListMultipartUploadParts", "s3:AbortMultipartUpload"]
     resources = ["${var.s3_bucket_arn}/*"]
   }
-}
-
-data "aws_caller_identity" "current" {}
-data "aws_partition" "current" {}
-data "aws_region" "current" {}
-
-data "aws_kms_key" "ssm" {
-  key_id = "alias/aws/ssm"
 }
