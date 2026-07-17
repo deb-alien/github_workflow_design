@@ -58,4 +58,5 @@ output "rds_ssm_parameters" {
       value = param.value
     }
   }
+  sensitive = true
 }

@@ -365,10 +365,5 @@ module "ecs_cluster" {
   health_check_path = var.health_check_path
 
   #| SSM Parameter Store Integration
-  ssm_parameters = merge(
-    module.rds.rds_ssm_parameters,
-    module.elasticache_valkey.elasticache_ssm_parameters,
-    module.cloudfront.cloudfront_ssm_parameters,
-    module.s3_bucket.s3_ssm_parameters
-  )
+  ssm_parameters = local.ssm_parameters
 }

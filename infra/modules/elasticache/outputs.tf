@@ -23,4 +23,5 @@ output "elasticache_ssm_parameters" {
       value = param.value
     }
   }
+  sensitive = true
 }

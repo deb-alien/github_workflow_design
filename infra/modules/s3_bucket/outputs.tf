@@ -33,4 +33,5 @@ output "s3_ssm_parameters" {
       value = param.value
     }
   }
+  sensitive = true
 }

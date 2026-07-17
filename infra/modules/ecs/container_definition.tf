@@ -21,10 +21,11 @@ locals {
 
       environment = concat(
         [
-          for key, param in var.ssm_parameters : {
+          for key in sort(keys(var.ssm_parameters)) : {
             name  = upper(replace(key, "/", "_"))
-            value = param.value
-          } if param.type == "String"
+            value = var.ssm_parameters[key].value
+          }
+          if var.ssm_parameters[key].type == "String"
         ],
         [
           {
@@ -43,10 +44,11 @@ locals {
       )
 
       secrets = [
-        for key, param in var.ssm_parameters : {
+        for key in sort(keys(var.ssm_parameters)) : {
           name      = upper(replace(key, "/", "_"))
-          valueFrom = param.arn
-        } if param.type == "SecureString"
+          valueFrom = var.ssm_parameters[key].arn
+        }
+        if var.ssm_parameters[key].type == "SecureString"
       ]
 
       logConfiguration = {

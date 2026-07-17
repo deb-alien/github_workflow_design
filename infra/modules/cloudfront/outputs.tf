@@ -43,4 +43,5 @@ output "cloudfront_ssm_parameters" {
       value = param.value
     }
   }
+  sensitive = true
 }
