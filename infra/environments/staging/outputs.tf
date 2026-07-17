@@ -211,7 +211,8 @@ output "ecr_repository_uri" {
   description = "The URI of the ECR repository"
 }
 
-output "container_name" {
-  value       = module.ecs_cluster.container_name
-  description = "The name of the container in the ECS task definition"
+output "ssm_parameters" {
+  value       = module.ecs_cluster.ssm_parameters
+  description = "The consolidated SSM parameter metadata map merged from all active core state layers."
+  sensitive   = true
 }
