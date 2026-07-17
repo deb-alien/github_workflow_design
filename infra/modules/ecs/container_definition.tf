@@ -22,7 +22,7 @@ locals {
       environment = concat(
         [
           for key in sort(keys(var.ssm_parameters)) : {
-            name  = upper(replace(key, "/", "_"))
+            name  = upper(key)
             value = var.ssm_parameters[key].value
           }
           if var.ssm_parameters[key].type == "String"
@@ -45,7 +45,7 @@ locals {
 
       secrets = [
         for key in sort(keys(var.ssm_parameters)) : {
-          name      = upper(replace(key, "/", "_"))
+          name      = upper(key)
           valueFrom = var.ssm_parameters[key].arn
         }
         if var.ssm_parameters[key].type == "SecureString"
