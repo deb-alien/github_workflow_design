@@ -13,8 +13,14 @@ output "port" {
   description = "The port number on which each member of the replication group accepts connections."
 }
 
-output "elasticache_auth_token" {
-  value       = random_password.auth_token.result
-  description = "The authentication token for the ElastiCache cluster."
-  sensitive   = true
+output "elasticache_ssm_parameters" {
+  description = "The SSM parameters for ElastiCache"
+  value = {
+    for key, param in aws_ssm_parameter.this : key => {
+      name  = param.name
+      arn   = param.arn
+      type  = param.type
+      value = param.value
+    }
+  }
 }
