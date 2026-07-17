@@ -19,22 +19,34 @@ locals {
         }
       ]
 
-      environment = [
-        {
-          name  = "NODE_ENV"
-          value = var.environment
-        },
-        {
-          name  = "PORT"
-          value = tostring(var.container_port)
-        }
-      ]
+      environment = concat(
+        [
+          for key, param in var.ssm_parameters : {
+            name  = upper(replace(key, "/", "_"))
+            value = param.value
+          } if param.type == "String"
+        ],
+        [
+          {
+            name  = "NODE_ENV"
+            value = var.environment
+          },
+          {
+            name  = "PORT"
+            value = tostring(var.container_port)
+          },
+          {
+            name  = "AWS_REGION"
+            value = var.aws_region
+          }
+        ]
+      )
 
       secrets = [
-        # {
-        #   name      = "DATABASE_URL"
-        #   valueFrom = aws_ssm_parameter.database_url.arn
-        # }
+        for key, param in var.ssm_parameters : {
+          name      = upper(replace(key, "/", "_"))
+          valueFrom = param.arn
+        } if param.type == "SecureString"
       ]
 
       logConfiguration = {
