@@ -23,6 +23,12 @@ output "auto_scaling_target_arn" {
   value       = try(aws_appautoscaling_target.ecs[0].arn, null)
 }
 
+output "container_name" {
+  description = "The name of the ECS container"
+  value       = jsondecode(aws_ecs_task_definition.api.container_definitions)[0].name
+  sensitive   = true
+}
+
 output "ssm_parameters" {
   description = "The consolidated SSM parameter metadata map merged from all active core state layers."
   value = {
@@ -32,4 +38,5 @@ output "ssm_parameters" {
       type = param.type
     }
   }
+  sensitive = true
 }
