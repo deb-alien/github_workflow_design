@@ -12,12 +12,6 @@ locals {
       description = "The endpoint of the ElastiCache cluster."
       type        = "String"
     }
-    redis_reader_endpoint = {
-      name        = "${local.parameter_prefix}/elasticache/reader_endpoint"
-      value       = aws_elasticache_replication_group.this.reader_endpoint_address
-      description = "The reader endpoint of the ElastiCache cluster."
-      type        = "String"
-    }
     redis_port = {
       name        = "${local.parameter_prefix}/elasticache/port"
       value       = tostring(aws_elasticache_replication_group.this.port)
