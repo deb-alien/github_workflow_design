@@ -8,31 +8,31 @@ locals {
   parameter_prefix = "/${var.project_name}/${var.environment}"
 
   ssm = {
-    database_username = {
+    db_username = {
       name        = "${local.parameter_prefix}/rds/username"
       value       = aws_db_instance.default.username
       description = "The administrative master service account username for the RDS database."
       type        = "SecureString"
     }
-    database_password = {
+    db_password = {
       name        = "${local.parameter_prefix}/rds/password"
       value       = random_password.password.result
       description = "The cryptographically random master credential password for the RDS database."
       type        = "SecureString"
     }
-    database_host = {
+    db_host = {
       name        = "${local.parameter_prefix}/rds/host"
       value       = aws_db_instance.default.endpoint
       description = "The fully qualified network ingress connection endpoint of the RDS database instance."
       type        = "String"
     }
-    database_port = {
+    db_port = {
       name        = "${local.parameter_prefix}/rds/port"
       value       = tostring(aws_db_instance.default.port)
       description = "The target listener network communications port of the RDS database instance."
       type        = "String"
     }
-    database_name = {
+    db_name = {
       name        = "${local.parameter_prefix}/rds/name"
       value       = coalesce(aws_db_instance.default.db_name, local.db_name)
       description = "The initial logical database instance storage name initialized inside the cluster."
