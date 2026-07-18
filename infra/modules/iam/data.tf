@@ -1,5 +1,5 @@
 # ==============================================================================
-# *: REMOTE IDENTITY & SECURITY DATA LOOKUPS
+#* REMOTE IDENTITY & SECURITY DATA LOOKUPS
 # ==============================================================================
 
 data "aws_caller_identity" "current" {}
@@ -13,7 +13,7 @@ data "aws_kms_key" "ssm" {
 
 
 # ==============================================================================
-#*IAM POLICY DOCUMENTS (SCHEMAS)
+#* IAM POLICY DOCUMENTS (SCHEMAS)
 # ==============================================================================
 
 /**
@@ -33,18 +33,14 @@ data "aws_iam_policy_document" "ecs_task_assume_role" {
 }
 
 /**
-  * Defined Least Privilege criteria granting permission to pull and
-  * decrypt credentials out of the AWS System Parameter Store.
-  */
+  ** Defined Least Privilege criteria granting permission to pull and
+  ** decrypt credentials out of the AWS System Parameter Store.
+*/
 data "aws_iam_policy_document" "secrets_access" {
   statement {
-    sid    = "SSMRead"
-    effect = "Allow"
-    actions = [
-      "ssm:GetParameter",
-      "ssm:GetParameters",
-      "ssm:GetParametersByPath"
-    ]
+    sid     = "SSMRead"
+    effect  = "Allow"
+    actions = ["ssm:GetParameter", "ssm:GetParameters", "ssm:GetParametersByPath"]
     resources = [
       "arn:${data.aws_partition.current.partition}:ssm:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:parameter${local.parameter_path}/*"
     ]
@@ -64,9 +60,9 @@ data "aws_iam_policy_document" "secrets_access" {
 }
 
 /**
-  * Dedicated data boundary policy restricting active bucket objects
-  * modification permissions exclusively to your target S3 application array.
-  */
+  ** Dedicated data boundary policy restricting active bucket objects
+  ** modification permissions exclusively to your target S3 application array.
+*/
 data "aws_iam_policy_document" "s3_access" {
   statement {
     sid       = "ApplicationS3Access"
