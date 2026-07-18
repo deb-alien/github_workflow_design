@@ -6,9 +6,8 @@ locals {
     Module      = "IAM"
   }
 
-  name_prefix             = "${var.project_name}-${var.environment}"
-  execution_role_name     = "${local.name_prefix}-ecs-execution-role"
-  task_role_name          = "${local.name_prefix}-ecs-task-role"
-  application_policy_name = "${local.name_prefix}-application-policy"
-  parameter_path          = "/${var.project_name}/${var.environment}"
+  name_prefix         = "${var.project_name}-${var.environment}"
+  execution_role_name = "${local.name_prefix}-ecs-execution-role"
+  task_role_name      = "${local.name_prefix}-ecs-task-role"
+  parameter_path      = "/${var.project_name}/${var.environment}"
 }
