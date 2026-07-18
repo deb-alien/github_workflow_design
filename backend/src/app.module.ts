@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import validateEnvironment from './config/validate-environment';
 import { DatabaseModule } from './database/database.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { DatabaseModule } from './database/database.module';
       validationSchema: validateEnvironment,
     }),
     DatabaseModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [],
