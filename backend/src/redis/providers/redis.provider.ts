@@ -25,7 +25,6 @@ export class RedisProvider implements OnModuleInit, OnModuleDestroy {
       password: this.config.authToken,
       lazyConnect: true,
       tls: this.config.isLocal ? undefined : {},
-
       maxRetriesPerRequest: 3,
       enableReadyCheck: true,
       connectTimeout: 5000,

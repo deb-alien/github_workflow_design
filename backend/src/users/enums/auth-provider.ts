@@ -1,0 +1,12 @@
+export enum AuthProvider {
+  GOOGLE = 'GOOGLE',
+  FACEBOOK = 'FACEBOOK',
+  GITHUB = 'GITHUB',
+  TWITTER = 'TWITTER',
+  LINKEDIN = 'LINKEDIN',
+  MICROSOFT = 'MICROSOFT',
+  APPLE = 'APPLE',
+  AMAZON = 'AMAZON',
+  SLACK = 'SLACK',
+  SPOTIFY = 'SPOTIFY',
+}
