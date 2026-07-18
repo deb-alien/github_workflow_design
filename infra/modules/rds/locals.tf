@@ -22,7 +22,7 @@ locals {
     }
     db_host = {
       name        = "${local.parameter_prefix}/rds/host"
-      value       = aws_db_instance.default.endpoint
+      value       = aws_db_instance.default.address
       description = "The fully qualified network ingress connection endpoint of the RDS database instance."
       type        = "String"
     }
