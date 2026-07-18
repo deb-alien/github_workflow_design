@@ -1,15 +1,15 @@
 services:
-  mongo:
-    image: mongo:latest
-    container_name: mongo
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
     ports:
-      - '27017:27017'
+      - '5432:5432'
     volumes:
-      - mongo_data:/data/db
+      - postgres_data:/var/lib/postgresql/data
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: my_database
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: app
   redis:
     image: redis:alpine
     container_name: redis
@@ -19,5 +19,5 @@ services:
       - redis_data:/data
 
 volumes:
-  mongo_data:
+  postgres_data:
   redis_data:
