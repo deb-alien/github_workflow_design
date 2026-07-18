@@ -47,3 +47,16 @@ output "rds_monitoring_role_arn" {
   description = "ARN of the RDS monitoring IAM role"
   value       = aws_iam_role.rds_enhanced_monitoring_role.arn
 }
+
+output "rds_ssm_parameters" {
+  description = "The SSM parameters for RDS"
+  value = {
+    for key, param in aws_ssm_parameter.this : key => {
+      name  = param.name
+      arn   = param.arn
+      type  = param.type
+      value = param.value
+    }
+  }
+  sensitive = true
+}

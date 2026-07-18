@@ -25,5 +25,4 @@ locals {
   ecs_bucket_actions = [
     "s3:ListBucket"
   ]
-
 }

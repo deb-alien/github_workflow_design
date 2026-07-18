@@ -124,3 +124,14 @@ variable "scale_out_cooldown" {
   type        = number
   default     = 60
 }
+
+variable "ssm_parameters" {
+  description = "The consolidated SSM parameter metadata map merged from all active core state layers."
+  type = map(object({
+    name  = string
+    arn   = string
+    type  = string
+    value = string
+  }))
+  sensitive = false
+}

@@ -28,34 +28,36 @@ jobs:
                 shell: bash
         environment: production
         steps:
-            - name: Checkout Code
-              uses: actions/checkout@v7
-
-            - name: Setup AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v6
+            - uses: actions/checkout@v7
+            - uses: aws-actions/configure-aws-credentials@v6
               with:
                   role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
                   aws-region: ${{ vars.AWS_REGION }}
 
             - name: Setup Terraform
-              uses: hashicorp/setup-terraform@v4
+              uses: ./.github/workflows/actions/setup-terraform/action.yaml
               with:
+                  working_directory: infra/environments/production
                   terraform_version: '1.15.0'
+                  tflint_version: 'latest'
 
-            - name: Terraform Init
+            - name: Terraform init
               run: |
-                  terraform init -input=false
+                  terraform init
 
-            - name: Terraform Plan
+            - name: Terraform plan
               run: |
                   terraform plan -input=false -out=tfplan
-                  terraform show -no-color tfplan > plan.txt
 
-            - name: Terraform Apply
+            - name: Terraform apply
               run: |
                   terraform apply -input=false tfplan
 
-            - name: Save Terraform Output
+            - name: Terraform show
+              run: |
+                  terraform show -no-color tfplan > plan.txt
+
+            - name: Terraform output
               run: |
                   terraform output -json > output.json
 

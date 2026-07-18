@@ -1,4 +1,4 @@
-resource "aws_ssm_parameter" "s3_bucket_name" {
+resource "aws_ssm_parameter" "this" {
   for_each = local.ssm
 
   name        = each.value.name

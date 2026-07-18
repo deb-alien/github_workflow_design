@@ -24,6 +24,19 @@ output "auto_scaling_target_arn" {
 }
 
 output "container_name" {
-  description = "The name of the container in the ECS task definition"
+  description = "The name of the ECS container"
   value       = jsondecode(aws_ecs_task_definition.api.container_definitions)[0].name
+  sensitive   = true
+}
+
+output "ssm_parameters" {
+  description = "The consolidated SSM parameter metadata map merged from all active core state layers."
+  value = {
+    for key, param in var.ssm_parameters : key => {
+      name = param.name
+      arn  = param.arn
+      type = param.type
+    }
+  }
+  sensitive = true
 }

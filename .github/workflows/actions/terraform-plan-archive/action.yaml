@@ -1,0 +1,61 @@
+name: 'Terraform Plan Archive'
+description: 'Archive Terraform plan files for future reference'
+
+inputs:
+    environment:
+        description: 'The environment for which the plan files are being archived'
+        required: true
+    archive_name:
+        description: 'The name of the archive file'
+        required: true
+    archive_retention_days:
+        description: 'The number of days to retain the archived plan files'
+        required: false
+        default: '7'
+    working_directory:
+        description: 'The path directory to the target environment code deployment configurations'
+        required: true
+
+outputs:
+    artifact_url:
+        description: 'The URL of the archived plan files'
+        value: ${{ steps.archive.outputs.artifact-url }}
+
+runs:
+    using: composite
+    steps:
+        - name: Print current working directory
+          shell: bash
+          run: |
+              echo "Initial runner working directory: $(pwd)"
+              echo "Target working directory: ${{ inputs.working_directory }}"
+
+        - name: Synchronize Active Remote Backend State Stores
+          shell: bash
+          working-directory: ${{ inputs.working_directory }}
+          run: |
+              echo "Synchronizing active remote backend state stores for ${GITHUB_REF_NAME} environment"
+              terraform init -input=false -reconfigure
+
+        - name: Compute Spec and Render Binary Plan file
+          shell: bash
+          working-directory: ${{ inputs.working_directory }}
+          run: |
+              echo "Calculating asset variations against target live cloud environments"
+              terraform plan \
+                -input=false \
+                -out=tfplan \
+                -detailed-exitcode
+
+              echo "Generating human-readable plan file"
+              terraform show -no-color tfplan > plan.txt
+
+        - name: Archive Plan Files
+          id: archive
+          uses: actions/upload-artifact@v7
+          with:
+              name: ${{ inputs.archive_name }}
+              path: |
+                  ${{ inputs.working_directory }}/tfplan
+                  ${{ inputs.working_directory }}/plan.txt
+              retention-days: ${{ inputs.archive_retention_days }}

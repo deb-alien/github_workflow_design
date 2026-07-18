@@ -371,4 +371,7 @@ module "ecs_cluster" {
   #| Monitoring & Telemetry
   container_insight = true
   health_check_path = var.health_check_path
+
+  #| SSM Parameter Store Integration
+  ssm_parameters = local.ssm_parameters
 }

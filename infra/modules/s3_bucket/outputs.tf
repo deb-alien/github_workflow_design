@@ -22,3 +22,16 @@ output "bucket_regional_domain_name" {
   description = "Regional bucket domain name"
   value       = aws_s3_bucket.this.bucket_regional_domain_name
 }
+
+output "s3_ssm_parameters" {
+  description = "The SSM parameters for S3 bucket"
+  value = {
+    for key, param in aws_ssm_parameter.this : key => {
+      name  = param.name
+      arn   = param.arn
+      type  = param.type
+      value = param.value
+    }
+  }
+  sensitive = true
+}
