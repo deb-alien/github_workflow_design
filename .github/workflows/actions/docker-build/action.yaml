@@ -61,8 +61,5 @@ runs:
                 --cache-to=type=gha,mode=max \
                 .
 
-               echo "Pushing image to Amazon ECR..."
-               docker push "$FULL_IMAGE_URI"
-
                echo "image_uri=$FULL_IMAGE_URI" >> $GITHUB_OUTPUT
                echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
