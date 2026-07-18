@@ -328,6 +328,19 @@ module "alb" {
 }
 
 /**
+  ** JWT secrets stored in SSM Parameter Store for secure access by ECS containers
+  ** This module provisions SSM parameters for JWT secrets, allowing secure access by ECS containers.
+  ** It allows the application to securely sign and verify JWT tokens for authentication and authorization.
+*/
+module "jwt" {
+  source = "../../modules/jwt"
+
+  #| Metadata
+  project_name = var.project_name
+  environment  = var.environment
+}
+
+/**
   ** ECS Fargate Cluster, Task Definitions, and Service Auto-scaling
   ** This module provisions an ECS cluster, defines task definitions, and configures service auto-scaling.
   ** It allows the application to run in a serverless container environment with automatic scaling based on resource utilization.

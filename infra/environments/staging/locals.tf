@@ -8,6 +8,7 @@ locals {
     module.rds.rds_ssm_parameters,
     module.elasticache_valkey.elasticache_ssm_parameters,
     module.cloudfront.cloudfront_ssm_parameters,
-    module.s3_bucket.s3_ssm_parameters
+    module.s3_bucket.s3_ssm_parameters,
+    module.jwt.jwt_ssm_parameters
   )
 }

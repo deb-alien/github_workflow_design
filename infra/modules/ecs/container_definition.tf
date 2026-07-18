@@ -39,6 +39,22 @@ locals {
           {
             name  = "AWS_REGION"
             value = var.aws_region
+          },
+          {
+            name  = "JWT_ACCESS_TOKEN_EXPIRATION"
+            value = tostring(900)
+          },
+          {
+            name  = "JWT_REFRESH_TOKEN_EXPIRATION",
+            value = tostring(86400)
+          },
+          {
+            name  = "USE_CLOUDFRONT",
+            value = tostring(true)
+          },
+          {
+            name  = "DB_SSL_CA_PATH"
+            value = "/app/certs/global-bundle.pem"
           }
         ]
       )
