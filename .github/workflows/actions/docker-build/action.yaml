@@ -51,14 +51,15 @@ runs:
 
               echo "Compiling container layers using Buildx: $FULL_IMAGE_URI"
 
-              docker buildx build \                 # Build the Docker image using Buildx
-                --file "${{ inputs.dockerfile }}" \ # Dockerfile path
-                "${DOCKER_BUILD_FLAGS[@]}" \        # Build arguments
-                --tag "$FULL_IMAGE_URI" \           # Tagging the image with the full URI
-                --push \                            # Push the image to the registry
-                --cache-from=type=gha \             # Use GitHub Actions cache for build layers
-                --cache-to=type=gha,mode=max \      # Store build cache in GitHub Actions
-                .                                   # Build context
+              docker buildx build \
+                --file "${{ inputs.dockerfile }}" \
+                "${DOCKER_BUILD_FLAGS[@]}" \
+                --tag "$FULL_IMAGE_URI" \
+                --platform linux/amd64 \
+                --push \
+                --cache-from=type=gha \
+                --cache-to=type=gha,mode=max \
+                .
 
                echo "Pushing image to Amazon ECR..."
                docker push "$FULL_IMAGE_URI"
