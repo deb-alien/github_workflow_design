@@ -1,6 +1,8 @@
 resource "random_password" "password" {
   length  = 32
-  special = false
+  special = true
+
+  override_special = "!#%^*()-_=+"
 
   min_upper   = 2
   min_lower   = 2

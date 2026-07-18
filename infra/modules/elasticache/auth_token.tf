@@ -1,8 +1,6 @@
 resource "random_password" "auth_token" {
   length  = 32
-  special = true
-
-  override_special = "!#%^*()-_=+"
+  special = false
 
   min_upper   = 2
   min_lower   = 2
