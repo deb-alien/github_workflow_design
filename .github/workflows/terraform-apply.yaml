@@ -34,8 +34,8 @@ jobs:
                   role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
                   aws-region: ${{ vars.AWS_REGION }}
 
-            - name: Setup Terraform
-              uses: ./.github/workflows/actions/setup-terraform/action.yaml
+            - name: Terraform Setup and Validate
+              uses: ./.github/workflows/actions/terraform-setup-and-validate
               with:
                   working_directory: infra/environments/production
                   terraform_version: '1.15.0'
